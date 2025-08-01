@@ -9,9 +9,11 @@ export class ValidateUserUseCase {
 
    async execute(email: string, password: string) {
       const user = await this.authRepo.findByEmail(email);
-      if (!user || !(await comparePasswords(password, user.password_hash))) {
+
+      if(!user || !(await comparePasswords(password, user.password_hash))) {
          throw new UnauthorizedException('Invalid credentials');
       }
+      
       return user;
    }
    

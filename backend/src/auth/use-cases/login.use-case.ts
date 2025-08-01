@@ -11,9 +11,10 @@ export class LoginUseCase {
    ) { }
 
    async execute(email: string, password: string) {
-      const user = await this.validateUser.execute(email, password);
+      const user    = await this.validateUser.execute(email, password);
       const payload = { sub: user.id, email: user.email, role: user.role };
-      const token = await this.jwtService.signAsync(payload);
+      const token   = await this.jwtService.signAsync(payload);
+      
       return { access_token: token };
    }
    
