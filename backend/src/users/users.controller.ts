@@ -5,7 +5,7 @@ import {
    Get,
    Param,
    Patch,
-   Post,
+   Post
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +14,12 @@ import { ListUsersUseCase } from './use-cases/list-users.use-case';
 import { UpdateUserUseCase } from './use-cases/update-user.use-case';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/user-response.dto';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UseInterceptors } from '@nestjs/common';
+import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -24,34 +30,28 @@ export class UsersController {
       private readonly updateUser: UpdateUserUseCase,
    ) { }
 
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+   @UseGuards(AuthGuard('jwt'), RolesGuard)
+   @Roles('admin')
    @Post()
    async create(@Body() dto: CreateUserDto) {
-      const user = await this.createUser.execute(dto);
-
-      return { success: true, data: this.toUserResponse(user) };
+      return await this.createUser.execute(dto);
    }
-
-   @Get()
+   
+   @UseGuards(AuthGuard('jwt'), RolesGuard)
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
    @Get()
    async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
       const pageNumber  = Math.max(Number(page) || 1, 1);
       const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
-      const users = await this.listUsers.execute({ page: pageNumber, limit: limitNumber });
-
-      return { success: true, data: this.toUserResponse(users) };
+      return this.listUsers.execute({ page: pageNumber, limit: limitNumber });
    }
 
-
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
    @Patch(':id')
    async update(@Param('id') id: number, @Body() dto: UpdateUserDto) {
-      const user = await this.updateUser.execute(id, dto);
-
-      return { success: true, data: this.toUserResponse(user) };
+      return await this.updateUser.execute(id, dto);
    }
 
-   private toUserResponse(data: any) {
-      return plainToInstance(UserResponseDto, data, { excludeExtraneousValues: true });
-   }
-   
 }

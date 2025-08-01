@@ -7,9 +7,12 @@ export class PrismaExceptionFilter implements ExceptionFilter {
    catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
       const ctx      = host.switchToHttp();
       const response = ctx.getResponse();
+      let status     =
+         exception instanceof HttpException
+            ? exception.getStatus()
+            : HttpStatus.INTERNAL_SERVER_ERROR;
 
-      let status  = HttpStatus.INTERNAL_SERVER_ERROR;
-      let message = 'Internal server error';
+      let message = exception instanceof HttpException ? exception.getResponse() : 'Internal server error';
 
       if(exception.code === 'P2002') {
          status  = HttpStatus.CONFLICT;
@@ -19,7 +22,8 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       response.status(status).json({
          statusCode: status,
          message,
-         error: 'Conflict'
+         timestamp: new Date().toISOString(),
+         path: ctx.getRequest().url
       });
    }
 
