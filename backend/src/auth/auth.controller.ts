@@ -1,19 +1,19 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto/login-user.dto';
+import { Controller, Post, Body } from '@nestjs/common';
+import { LoginDto } from './dto/login.dto';
+import { LoginUseCase } from './use-cases/login.use-case';
 import { plainToInstance } from 'class-transformer';
-import { UserResponseDto } from '../users/dto/user-response.dto';
+import { TokenResponseDto } from './dto/token-response.dto';
 
 @Controller('auth')
 export class AuthController {
-   constructor(private readonly authService: AuthService) { }
+
+   constructor(private readonly loginUseCase: LoginUseCase) { }
 
    @Post('login')
-   async login(@Body() data: LoginUserDto): Promise<UserResponseDto> {
-      const user = await this.authService.validateUser(data.email, data.password);
-      if (!user) {
-         throw new UnauthorizedException('Invalid email or password');
-      }
-      return plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true });
+   async login(@Body() dto: LoginDto) {
+      const token = await this.loginUseCase.execute(dto.email, dto.password);
+
+      return { success: true, data: plainToInstance(TokenResponseDto, token) };
    }
+
 }

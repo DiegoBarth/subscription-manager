@@ -1,25 +1,27 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsStrongPassword } from 'src/common/validators/strong-password.validator';
 
-export class CreateUserDto {
+export class UpdateUserDto {
 
-   @IsNotEmpty()
+   @IsOptional()
    @IsString()
    @Transform(({ value }) => value.trim())
-   name: string;
+   name?: string;
 
+   @IsOptional()
    @IsEmail()
    @Transform(({ value }) => value.trim())
-   email: string;
+   email?: string;
 
+   @IsOptional()
    @IsStrongPassword()
-   password: string;
+   password?: string;
 
-   @IsNotEmpty()
+   @IsOptional()
    @IsString()
    @IsIn(['admin', 'user', 'moderator'])
-   role: string;
+   role?: string;
    
 }

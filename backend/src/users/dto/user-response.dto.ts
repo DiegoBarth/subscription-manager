@@ -2,6 +2,7 @@ import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsIn } from 'class-validator';
 
 export class UserResponseDto {
+
    @Expose()
    id: number;
 
@@ -10,11 +11,11 @@ export class UserResponseDto {
 
    @Expose()
    email: string;
-   
+
    @Expose()
    @IsIn(['admin', 'user', 'moderator'], { message: 'Invalid role.' })
    role: string;
-   
+
    @Expose()
    @Transform(({ value }) => value?.toISOString())
    created_at: Date;
@@ -27,4 +28,5 @@ export class UserResponseDto {
 
    @Exclude()
    deleted_at?: Date;
+
 }
