@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthRepository } from '../auth.repository';
+import { AuthRepository } from '../infrastructure/repositories';
 import { comparePasswords } from 'src/common/utils/hash-password';
 
 @Injectable()

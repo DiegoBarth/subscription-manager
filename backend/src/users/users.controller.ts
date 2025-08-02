@@ -14,10 +14,10 @@ import { ListUsersUseCase } from './use-cases/list-users.use-case';
 import { UpdateUserUseCase } from './use-cases/update-user.use-case';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/user-response.dto';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { RolesGuard } from 'src/auth/infrastructure/guards/roles.guard';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Roles } from 'src/auth/infrastructure/decorators/roles.decorator';
 import { UseInterceptors } from '@nestjs/common';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 

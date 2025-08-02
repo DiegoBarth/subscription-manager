@@ -1,8 +1,7 @@
 import { Controller, Post, Body, UseInterceptors } from '@nestjs/common';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
-import { LoginUseCase } from './use-cases/login.use-case';
-import { LoginDto } from './dto/login.dto';
-import { TokenResponseDto } from './dto/token-response.dto';
+import { LoginUseCase } from '../application';
+import { LoginDto, TokenResponseDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
