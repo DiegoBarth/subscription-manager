@@ -5,4 +5,7 @@ export class TokenResponseDto {
    @Expose()
    access_token: string;
 
+   @Expose()
+   refresh_token:string;
+
 }

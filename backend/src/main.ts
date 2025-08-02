@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+import { PrismaExceptionFilter, AllExceptionsFilter } from './common/filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -23,7 +23,10 @@ async function bootstrap() {
       transform: true
    }));
 
-   app.useGlobalFilters(new PrismaExceptionFilter());
+   app.useGlobalFilters(
+      new PrismaExceptionFilter(),
+      new AllExceptionsFilter()
+   );
 
    await app.listen(3000);
 }

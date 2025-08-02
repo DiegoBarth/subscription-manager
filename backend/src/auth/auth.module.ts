@@ -4,9 +4,9 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthController } from './adapters';
-import { AuthRepository } from './infrastructure/repositories';
+import { AuthRepository, RefreshTokenRepository  } from './infrastructure/repositories';
 import { JwtStrategy } from './infrastructure/strategies';
-import { LoginUseCase, ValidateUserUseCase } from './application';
+import { LoginUseCase, ValidateUserUseCase, RefreshTokenUseCase } from './application';
 
 @Module({
    imports: [
@@ -25,7 +25,9 @@ import { LoginUseCase, ValidateUserUseCase } from './application';
    providers: [
       PrismaService,
       AuthRepository,
+      RefreshTokenRepository,
       ValidateUserUseCase,
+      RefreshTokenUseCase,
       LoginUseCase,
       JwtStrategy
    ],

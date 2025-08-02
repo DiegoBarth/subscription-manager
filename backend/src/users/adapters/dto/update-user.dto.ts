@@ -1,7 +1,7 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { IsIn } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { IsStrongPassword } from 'src/common/validators/strong-password.validator';
+import { IsStrongPassword } from 'src/common/validators';
+import { UserRole } from './roles.enum';
 
 export class UpdateUserDto {
 
@@ -21,7 +21,7 @@ export class UpdateUserDto {
 
    @IsOptional()
    @IsString()
-   @IsIn(['admin', 'user', 'moderator'])
+   @IsIn(Object.values(UserRole))
    role?: string;
    
 }

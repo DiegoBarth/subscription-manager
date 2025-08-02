@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UsersRepository } from '../users.repository';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { UsersRepository } from '../infraestructure/repositories';
+import { UpdateUserDto } from '../adapters/dto';
 import { hashPassword } from 'src/common/utils/hash-password';
 
 @Injectable()

@@ -1,5 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsIn } from 'class-validator';
+import { UserRole } from './roles.enum';
 
 export class UserResponseDto {
 
@@ -13,7 +14,7 @@ export class UserResponseDto {
    email: string;
 
    @Expose()
-   @IsIn(['admin', 'user', 'moderator'], { message: 'Invalid role.' })
+   @IsIn(Object.values(UserRole), { message: 'Invalid role.' })
    role: string;
 
    @Expose()
