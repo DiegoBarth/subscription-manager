@@ -24,7 +24,7 @@ export class RefreshTokenRepository {
 
    async remove(token: string) {
       return this.prisma.refresh_token.deleteMany({
-         where: { token },
+         where: { token }
       });
    }
 }

@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthController } from './adapters';
 import { AuthRepository, RefreshTokenRepository  } from './infrastructure/repositories';
 import { JwtStrategy } from './infrastructure/strategies';
-import { LoginUseCase, ValidateUserUseCase, RefreshTokenUseCase } from './application';
+import { LoginUseCase, LogoutUseCase, ValidateUserUseCase, RefreshTokenUseCase } from './application';
 
 @Module({
    imports: [
@@ -29,6 +29,7 @@ import { LoginUseCase, ValidateUserUseCase, RefreshTokenUseCase } from './applic
       ValidateUserUseCase,
       RefreshTokenUseCase,
       LoginUseCase,
+      LogoutUseCase,
       JwtStrategy
    ],
    exports: [LoginUseCase]
