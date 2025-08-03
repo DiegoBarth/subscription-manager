@@ -1,13 +1,16 @@
 import { Body, Query, Controller, Get, Param, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from './dto';
+import { CreateUserDto, UpdateUserDto, UserResponseDto, ListUsersDto } from './dto';
 import { CreateUserUseCase, UpdateUserUseCase, ListUsersUseCase } from '../application';
 import { RolesGuard } from 'src/auth/infrastructure';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/auth/infrastructure';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
-import { ApiBody, ApiOperation, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiOperation, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
+import { UsersSwagger } from './users.swagger';
+import { Auth, Roles } from 'src/common/decorators';
 
 @Controller('users')
+@ApiTags('Users') 
 export class UsersController {
 
    constructor(
@@ -16,39 +19,46 @@ export class UsersController {
       private readonly updateUser: UpdateUserUseCase,
    ) { }
 
-   @UseGuards(AuthGuard('jwt'), RolesGuard)
-   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
-   @Roles('admin')
    @Post()
-   @ApiOperation({ summary: 'Create a new user (Admin only)' })
-   @ApiBearerAuth()
-   @ApiBody({ type: CreateUserDto })
+   @Auth()
+   @Roles('admin')
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+   @ApplySwagger(UsersSwagger.create)
    async create(@Body() dto: CreateUserDto) {
       return await this.createUser.execute(dto);
    }
 
-   @UseGuards(AuthGuard('jwt'), RolesGuard)
-   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
    @Get()
-   @ApiOperation({ summary: 'List all users (Paginated)' })
-   @ApiBearerAuth()
-   @ApiQuery({ name: 'page', required: false, example: 1 })
-   @ApiQuery({ name: 'limit', required: false, example: 10 })
-   async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-      const pageNumber = Math.max(Number(page) || 1, 1);
-      const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
+   @Auth()
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+   @ApplySwagger(UsersSwagger.findAll)
+   async findAll(@Query() query: ListUsersDto) {
+      const {
+         page  = '1',
+         limit = '10',
+         search,
+         sortBy,
+         sortOrder
+      } = query;
 
-      return this.listUsers.execute({ page: pageNumber, limit: limitNumber });
+      const filters: Record<string, any> = {};
+
+      return this.listUsers.execute({
+         page:  Math.max(Number(page), 1),
+         limit: Math.min(Math.max(Number(limit), 1), 100),
+         search,
+         sortBy,
+         sortOrder,
+         filters
+      });
    }
 
-   @UseGuards(AuthGuard('jwt'), RolesGuard)
-   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
-   @Roles('admin')
+
    @Patch(':id')
-   @ApiOperation({ summary: 'Update user by ID (Admin only)' })
-   @ApiBearerAuth()
-   @ApiParam({ name: 'id', type: Number })
-   @ApiBody({ type: UpdateUserDto })
+   @Auth()
+   @Roles('admin')
+   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+   @ApplySwagger(UsersSwagger.update)
    async update(@Param('id') id: number, @Body() dto: UpdateUserDto) {
       return await this.updateUser.execute(id, dto);
    }

@@ -1,15 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infraestructure/repositories';
+import { ListUsersParams } from './interfaces/list-users-params.interface';
 
 @Injectable()
 export class ListUsersUseCase {
-   
+
    constructor(private readonly usersRepo: UsersRepository) { }
 
-   async execute({ page, limit }: { page: number; limit: number }) {
-      const skip = (page - 1) * limit;
+   async execute(params: ListUsersParams) {
+      const {
+         page,
+         limit,
+         search,
+         sortBy = 'created_at',
+         sortOrder = 'DESC',
+         filters = {},
+      } = params;
 
-      return this.usersRepo.findAll({ skip, take: limit });
+      const skip = (page - 1) * limit;
+      const take = limit;
+
+      return this.usersRepo.findAll({
+         skip,
+         take,
+         search,
+         sortBy,
+         sortOrder,
+         filters
+      });
    }
 
 }
