@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '../infraestructure/repositories';
+import { UsersRepository } from '../infrastructure/repositories';
 import { ListUsersParams } from './interfaces/list-users-params.interface';
 
 @Injectable()
