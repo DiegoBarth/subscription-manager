@@ -31,18 +31,58 @@
 $ npm install
 ```
 
+## Database setup
+
+This project uses Prisma with a local SQLite database.
+
+Generate the Prisma client:
+
+```bash
+$ npx prisma generate
+```
+
+Create the local database:
+
+```bash
+$ npx prisma db push
+```
+
+This will create the file:
+
+```bash
+prisma/dev.db
+```
+
+Note: the database file is ignored by git and will be created locally.
+
+## Database management (Prisma Studio)
+
+To visualize and edit the database through a web interface:
+
+```bash
+$ npx prisma studio
+```
+
+Prisma Studio will open in your browser.
+
 ## Compile and run the project
 
 ```bash
 # development
-$ npm run start
+$ npm run dev
 
-# watch mode
+# watch mode (alternative)
 $ npm run start:dev
 
 # production mode
 $ npm run start:prod
 ```
+
+The application will start at:
+
+```bash
+http://localhost:3000
+````
 
 ## Run tests
 
