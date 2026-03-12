@@ -1,12 +1,25 @@
-import { applyDecorators, UseGuards, createParamDecorator, ExecutionContext } from '@nestjs/common';
+import {
+  applyDecorators,
+  UseGuards,
+  createParamDecorator,
+  ExecutionContext,
+  SetMetadata
+} from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/infrastructure';
 
-export function Auth() {
-  return applyDecorators(
+export function Auth(...roles: string[]) {
+
+  const decorators = [
     UseGuards(AuthGuard('jwt'), RolesGuard)
-  );
+  ];
+
+  if (roles.length) {
+    decorators.push(SetMetadata('roles', roles));
+  }
+
+  return applyDecorators(...decorators);
 }
 
 export const AuthUser = createParamDecorator(

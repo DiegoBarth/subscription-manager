@@ -1,8 +1,7 @@
-import { Body, Query, Controller, Param, Patch, Get, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Query, Controller, Param, Patch, Get, Post, UseInterceptors, ParseIntPipe } from '@nestjs/common';
 import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto, ListCustomersDto } from './dto';
 import { CreateCustomerUseCase, UpdateCustomerUseCase, ListCustomersUseCase } from '../application';
 import { Auth, AuthUser } from 'src/common/decorators';
-import { Roles } from 'src/common/decorators';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -17,8 +16,7 @@ export class CustomersController {
   ) { }
 
   @Post()
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   async create(@Body() dto: CreateCustomerDto, @AuthUser('id') userId: number) {
     return await this.createCustomer.execute(userId, dto);
@@ -49,10 +47,9 @@ export class CustomersController {
   }
 
   @Patch(':id')
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
-  async update(@Param('id') id: number, @Body() dto: UpdateCustomerDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCustomerDto) {
     return await this.updateCustomer.execute(Number(id), dto);
   }
 }

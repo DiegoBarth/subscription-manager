@@ -1,11 +1,11 @@
-import { Body, Query, Controller, Get, Param, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Query, Controller, Get, Param, Patch, Post, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, UserResponseDto, ListUsersDto } from './dto';
 import { CreateUserUseCase, UpdateUserUseCase, ListUsersUseCase } from '../application';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { UsersSwagger } from './users.swagger';
-import { Auth, Roles } from 'src/common/decorators';
+import { Auth } from 'src/common/decorators';
 
 @Controller('users')
 @ApiTags('Users')
@@ -18,8 +18,7 @@ export class UsersController {
   ) { }
 
   @Post()
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.create)
   async create(@Body() dto: CreateUserDto) {
@@ -51,14 +50,11 @@ export class UsersController {
     });
   }
 
-
   @Patch(':id')
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.update)
-  async update(@Param('id') id: number, @Body() dto: UpdateUserDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
     return await this.updateUser.execute(id, dto);
   }
-
 }

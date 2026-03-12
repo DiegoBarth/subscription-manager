@@ -5,7 +5,7 @@ import { SerializeInterceptor } from 'src/common/middlewares/response.intercepto
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { PlansSwagger } from './plans.swagger';
-import { Auth, Roles } from 'src/common/decorators';
+import { Auth } from 'src/common/decorators';
 
 @Controller('plans')
 @ApiTags('Plans')
@@ -18,8 +18,7 @@ export class PlansController {
   ) { }
 
   @Post()
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(PlanResponseDto))
   @ApplySwagger(PlansSwagger.create)
   async create(@Body() dto: CreatePlanDto) {
@@ -52,8 +51,7 @@ export class PlansController {
   }
 
   @Patch(':id')
-  @Auth()
-  @Roles('admin')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(PlanResponseDto))
   @ApplySwagger(PlansSwagger.update)
   async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePlanDto) {
