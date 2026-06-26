@@ -50,8 +50,7 @@ export class CustomersRepository {
 
     const where: any = { ...filters };
 
-    // Pesquisa por texto parcial
-    if (search) {
+    if(search) {
       where.OR = [
         { name: { contains: search } },
         { email: { contains: search } },
@@ -59,10 +58,10 @@ export class CustomersRepository {
       ];
     }
 
-    if (name) where.name = { contains: name };
-    if (email) where.email = { contains: email };
-    if (phone) where.phone = { contains: phone };
-    if (userId) where.user_id = userId;
+    if(name) where.name = { contains: name };
+    if(email) where.email = { contains: email };
+    if(phone) where.phone = { contains: phone };
+    if(userId) where.user_id = userId;
 
     return this.prisma.customer.findMany({
       skip,

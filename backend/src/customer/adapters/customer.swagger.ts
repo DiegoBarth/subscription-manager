@@ -20,6 +20,16 @@ export const CustomersSwagger = {
       { name: 'sortOrder', required: false, example: 'ASC' },
     ],
   },
+  findById: {
+    summary: 'Get customer by ID',
+    bearerAuth: true,
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: CustomerResponseDto
+  },
   update: {
     summary: 'Update customer by ID (Admin only)',
     bearerAuth: true,
