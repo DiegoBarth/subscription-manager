@@ -2,31 +2,31 @@ import { IsEmail, IsOptional, IsString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsStrongPassword } from 'src/common/validators';
 import { UserRole } from 'src/users/domain/enums';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
 
    @IsOptional()
    @IsString()
    @Transform(({ value }) => value.trim())
-   @ApiProperty({example: 'User Name'})
+   @ApiPropertyOptional({example: 'User Name'})
    name?: string;
 
    @IsOptional()
    @IsEmail()
    @Transform(({ value }) => value.trim())
-   @ApiProperty({example: 'user.name@gmail.com'})
+   @ApiPropertyOptional({example: 'user.name@gmail.com'})
    email?: string;
 
    @IsOptional()
    @IsStrongPassword()
-   @ApiProperty({example: 'user_password'})
+   @ApiPropertyOptional({example: 'user_password'})
    password?: string;
 
    @IsOptional()
    @IsString()
    @IsIn(Object.values(UserRole))
-   @ApiProperty({example: 'admin'})
+   @ApiPropertyOptional({example: 'admin'})
    role?: string;
    
 }

@@ -1,24 +1,24 @@
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateCustomerDto {
 
   @IsOptional()
   @IsString()
   @Transform(({ value }) => value?.trim())
-  @ApiProperty({ example: 'John Doe', required: false })
+  @ApiPropertyOptional({ example: 'John Doe', required: false })
   name?: string;
 
   @IsOptional()
   @IsEmail()
   @Transform(({ value }) => value?.trim())
-  @ApiProperty({ example: 'john.doe@gmail.com', required: false })
+  @ApiPropertyOptional({ example: 'john.doe@gmail.com', required: false })
   email?: string;
 
   @IsOptional()
   @IsString()
   @Transform(({ value }) => value?.trim())
-  @ApiProperty({ example: '+55 11 99999-9999', required: false })
+  @ApiPropertyOptional({ example: '+55 11 99999-9999', required: false })
   phone?: string;
 }
