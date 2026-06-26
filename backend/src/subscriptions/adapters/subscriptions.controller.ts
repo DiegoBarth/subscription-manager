@@ -47,7 +47,7 @@ export class SubscriptionsController {
     private readonly updateSubscription: UpdateSubscriptionUseCase,
     private readonly subscribeSubscription: SubscribeSubscriptionUseCase,
     private readonly cancelSubscription: CancelSubscriptionUseCase,
-    private readonly listUseSubscriptions: ListUserSubscriptionsUseCase,
+    private readonly listUserSubscriptions: ListUserSubscriptionsUseCase,
   ) { }
 
   /*
@@ -64,33 +64,8 @@ export class SubscriptionsController {
     return this.createSubscription.execute(dto);
   }
 
-  @Get(':id')
-  @Auth('admin')
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.findById)
-  async findById(@Param('id', ParseIntPipe) id: number) {
-    return this.findSubscription.execute(id);
-  }
-
-  @Patch(':id')
-  @Auth('admin')
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.update)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateSubscriptionDto
-  ) {
-    return this.updateSubscription.execute(id, dto);
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER ROUTES
-  |--------------------------------------------------------------------------
-  */
-
   @Get()
-  @Auth()
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
   @ApplySwagger(SubscriptionsSwagger.findAll)
   async findAll(@Query() query: ListSubscriptionsDto) {
@@ -119,30 +94,27 @@ export class SubscriptionsController {
     });
   }
 
-  @Post('subscribe')
-  @Auth()
+  @Patch(':id')
+  @Auth('admin')
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  async subscribe(
-    @AuthUser() user: any,
-    @Body() dto: SubscribeSubscriptionDto
+  @ApplySwagger(SubscriptionsSwagger.update)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSubscriptionDto
   ) {
-    return this.subscribeSubscription.execute(user.id, dto);
+    return this.updateSubscription.execute(id, dto);
   }
 
-  @Patch(':id/cancel')
-  @Auth()
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  async cancel(
-    @Param('id', ParseIntPipe) id: number,
-    @AuthUser() user: any,
-    @Body() dto: CancelSubscriptionDto
-  ) {
-    return this.cancelSubscription.execute(id, user.id, dto);
-  }
+  /*
+  |--------------------------------------------------------------------------
+  | USER ROUTES
+  |--------------------------------------------------------------------------
+  */
 
   @Get('me')
   @Auth()
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.findMine)
   async findMine(
     @AuthUser() user: any,
     @Query() query: ListUserSubscriptionsDto
@@ -156,7 +128,7 @@ export class SubscriptionsController {
       status
     } = query;
 
-    return this.listUseSubscriptions.execute({
+    return this.listUserSubscriptions.execute({
       customerId: user.id,
       page: Math.max(Number(page), 1),
       limit: Math.min(Math.max(Number(limit), 1), 100),
@@ -164,7 +136,40 @@ export class SubscriptionsController {
       sortOrder,
       status
     });
+  }
 
+  @Get(':id')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.findById)
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: any
+  ) {
+    return this.findSubscription.execute(id, user);
+  }
+
+  @Post('subscribe')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.subscribe)
+  async subscribe(
+    @AuthUser() user: any,
+    @Body() dto: SubscribeSubscriptionDto
+  ) {
+    return this.subscribeSubscription.execute(user.id, dto);
+  }
+
+  @Patch(':id/cancel')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.cancel)
+  async cancel(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: any,
+    @Body() dto: CancelSubscriptionDto
+  ) {
+    return this.cancelSubscription.execute(id, user.id, dto);
   }
 
 }

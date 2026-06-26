@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { SubscriptionsRepository } from '../infrastructure/repositories';
 
 @Injectable()
@@ -6,11 +6,15 @@ export class FindSubscriptionUseCase {
 
   constructor(private readonly subscriptionsRepo: SubscriptionsRepository) { }
 
-  async execute(id: number) {
+  async execute(id: number, user: any) {
     const subscription = await this.subscriptionsRepo.findById(id);
 
     if(!subscription) {
       throw new NotFoundException(`Subscription with id ${id} not found`);
+    }
+
+    if(user.role !== 'admin' && subscription.customer_id !== user.id) {
+      throw new ForbiddenException();
     }
 
     return subscription;

@@ -1,4 +1,10 @@
-import { CreateSubscriptionDto, UpdateSubscriptionDto, SubscriptionResponseDto } from "./dto";
+import {
+  CreateSubscriptionDto,
+  UpdateSubscriptionDto,
+  SubscriptionResponseDto,
+  SubscribeSubscriptionDto,
+  CancelSubscriptionDto
+} from "./dto";
 
 export const SubscriptionsSwagger = {
 
@@ -11,21 +17,26 @@ export const SubscriptionsSwagger = {
   },
 
   findAll: {
-    summary: 'List all subscriptions (Paginated)',
+    summary: 'List all subscriptions (Admin only)',
     bearerAuth: true,
+    roles: ['admin'],
     responseType: SubscriptionResponseDto,
     queryParams: [
       { name: 'page', required: false, example: 1 },
       { name: 'limit', required: false, example: 10 },
-      { name: 'search', required: false, example: '1' },
-      { name: 'sortBy', required: false, example: 'id' },
-      { name: 'sortOrder', required: false, example: 'ASC' }
+      { name: 'search', required: false, example: 'active' },
+      { name: 'customerId', required: false, example: 1 },
+      { name: 'planId', required: false, example: 2 },
+      { name: 'status', required: false, example: 'active' },
+      { name: 'sortBy', required: false, example: 'created_at' },
+      { name: 'sortOrder', required: false, example: 'DESC' }
     ],
   },
 
   findById: {
-    summary: 'Get subscription by ID',
+    summary: 'Get subscription by ID (Admin only)',
     bearerAuth: true,
+    roles: ['admin'],
     param: {
       name: 'id',
       type: Number,
@@ -45,5 +56,38 @@ export const SubscriptionsSwagger = {
       example: 1
     },
     responseType: SubscriptionResponseDto
+  },
+
+  subscribe: {
+    summary: 'Subscribe authenticated customer to a plan',
+    bearerAuth: true,
+    bodyType: SubscribeSubscriptionDto,
+    responseType: SubscriptionResponseDto
+  },
+
+  cancel: {
+    summary: 'Cancel one of the authenticated customer subscriptions',
+    bearerAuth: true,
+    bodyType: CancelSubscriptionDto,
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: SubscriptionResponseDto
+  },
+
+  findMine: {
+    summary: 'List authenticated customer subscriptions',
+    bearerAuth: true,
+    responseType: SubscriptionResponseDto,
+    queryParams: [
+      { name: 'page', required: false, example: 1 },
+      { name: 'limit', required: false, example: 10 },
+      { name: 'status', required: false, example: 'active' },
+      { name: 'sortBy', required: false, example: 'created_at' },
+      { name: 'sortOrder', required: false, example: 'DESC' }
+    ]
   }
+
 };
