@@ -23,6 +23,17 @@ export const SubscriptionsSwagger = {
     ],
   },
 
+  findById: {
+    summary: 'Get subscription by ID',
+    bearerAuth: true,
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: SubscriptionResponseDto
+  },
+
   update: {
     summary: 'Update subscription by ID (Admin only)',
     bearerAuth: true,

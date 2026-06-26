@@ -26,7 +26,8 @@ import {
   ListSubscriptionsUseCase,
   SubscribeSubscriptionUseCase,
   CancelSubscriptionUseCase,
-  ListUserSubscriptionsUseCase
+  ListUserSubscriptionsUseCase,
+  FindSubscriptionUseCase
 } from '../application';
 
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
@@ -42,6 +43,7 @@ export class SubscriptionsController {
   constructor(
     private readonly createSubscription: CreateSubscriptionUseCase,
     private readonly listSubscriptions: ListSubscriptionsUseCase,
+    private readonly findSubscription: FindSubscriptionUseCase,
     private readonly updateSubscription: UpdateSubscriptionUseCase,
     private readonly subscribeSubscription: SubscribeSubscriptionUseCase,
     private readonly cancelSubscription: CancelSubscriptionUseCase,
@@ -61,6 +63,31 @@ export class SubscriptionsController {
   async create(@Body() dto: CreateSubscriptionDto) {
     return this.createSubscription.execute(dto);
   }
+
+  @Get(':id')
+  @Auth('admin')
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.findById)
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    return this.findSubscription.execute(id);
+  }
+
+  @Patch(':id')
+  @Auth('admin')
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.update)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSubscriptionDto
+  ) {
+    return this.updateSubscription.execute(id, dto);
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | USER ROUTES
+  |--------------------------------------------------------------------------
+  */
 
   @Get()
   @Auth()
@@ -90,25 +117,7 @@ export class SubscriptionsController {
       sortOrder,
       filters
     });
-
   }
-
-  @Patch(':id')
-  @Auth('admin')
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.update)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateSubscriptionDto
-  ) {
-    return this.updateSubscription.execute(id, dto);
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER ROUTES
-  |--------------------------------------------------------------------------
-  */
 
   @Post('subscribe')
   @Auth()

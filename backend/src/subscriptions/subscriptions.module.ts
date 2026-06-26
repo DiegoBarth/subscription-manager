@@ -9,7 +9,8 @@ import {
   UpdateSubscriptionUseCase,
   CancelSubscriptionUseCase,
   ListUserSubscriptionsUseCase,
-  SubscribeSubscriptionUseCase
+  SubscribeSubscriptionUseCase,
+  FindSubscriptionUseCase
 } from './application';
 
 import { CustomerModule } from 'src/customer/customer.module';
@@ -29,7 +30,8 @@ import { PlansModule } from 'src/plans/plans.module';
     UpdateSubscriptionUseCase,
     CancelSubscriptionUseCase,
     ListUserSubscriptionsUseCase,
-    SubscribeSubscriptionUseCase
+    SubscribeSubscriptionUseCase,
+    FindSubscriptionUseCase
   ],
   exports: [SubscriptionsRepository],
 })
