@@ -1,6 +1,6 @@
 import { Body, Query, Controller, Get, Param, Patch, Post, UseInterceptors, ParseIntPipe } from '@nestjs/common';
 import { CreatePlanDto, UpdatePlanDto, PlanResponseDto, ListPlansDto } from './dto';
-import { CreatePlanUseCase, UpdatePlanUseCase, ListPlansUseCase } from '../application';
+import { CreatePlanUseCase, UpdatePlanUseCase, ListPlansUseCase, FindPlanUseCase } from '../application';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
@@ -15,6 +15,7 @@ export class PlansController {
     private readonly createPlan: CreatePlanUseCase,
     private readonly listPlans: ListPlansUseCase,
     private readonly updatePlan: UpdatePlanUseCase,
+    private readonly findPlan: FindPlanUseCase
   ) { }
 
   @Post()
@@ -48,6 +49,16 @@ export class PlansController {
       sortOrder,
       filters
     });
+  }
+
+  @Get(':id')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(PlanResponseDto))
+  @ApplySwagger(PlansSwagger.findById)
+  async findById(
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.findPlan.execute(id);
   }
 
   @Patch(':id')

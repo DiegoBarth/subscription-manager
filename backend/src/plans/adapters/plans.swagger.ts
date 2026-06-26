@@ -20,6 +20,16 @@ export const PlansSwagger = {
       { name: 'sortOrder', required: false, example: 'ASC' }
     ],
   },
+  findById: {
+    summary: 'Get plan by ID',
+    bearerAuth: true,
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: PlanResponseDto
+  },
   update: {
     summary: 'Update plan by ID (Admin only)',
     bearerAuth: true,
