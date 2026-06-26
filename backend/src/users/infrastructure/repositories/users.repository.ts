@@ -6,75 +6,75 @@ import { FindUsersParams } from 'src/users/domain/interfaces/find-users-params.i
 @Injectable()
 export class UsersRepository {
 
-   constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) { }
 
-   create(data: CreateUserDto & { password: string }) {
-      return this.prisma.user.create({
-         data: {
-            name: data.name,
-            email: data.email,
-            role: data.role,
-            password_hash: data.password
-         }
-      });
-   }
-
-   update(id: number, data: UpdateUserDto) {
-      const prismaData = { ...data } as any;
-
-      if (prismaData.password) {
-         prismaData.password_hash = prismaData.password;
-
-         delete prismaData.password;
+  create(data: CreateUserDto & { password: string }) {
+    return this.prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        password_hash: data.password
       }
+    });
+  }
 
-      return this.prisma.user.update({ where: { id }, data: prismaData });
-   }
+  update(id: number, data: UpdateUserDto) {
+    const prismaData = { ...data } as any;
 
-   findByEmail(email: string) {
-      return this.prisma.user.findUnique({ where: { email } });
-   }
+    if(prismaData.password) {
+      prismaData.password_hash = prismaData.password;
 
-   findById(id: number) {
-      return this.prisma.user.findUnique({ where: { id } });
-   }
+      delete prismaData.password;
+    }
 
-   findAll(params?: FindUsersParams) {
-      const {
-         skip,
-         take,
-         name,
-         email,
-         role,
-         search,
-         sortBy = 'createdAt',
-         sortOrder = 'DESC',
-         filters = {}
-      } = params || {};
+    return this.prisma.user.update({ where: { id }, data: prismaData });
+  }
 
-      const where: any = {
-         ...filters,
-      };
+  findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
 
-      if(search) {
-         where.OR = [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } }
-         ];
+  findById(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  findAll(params?: FindUsersParams) {
+    const {
+      skip,
+      take,
+      name,
+      email,
+      role,
+      search,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+      filters = {}
+    } = params || {};
+
+    const where: any = {
+      ...filters,
+    };
+
+    if (search) {
+      where.OR = [
+        { name:  { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    if(name) where.name   = { contains: name,  mode: 'insensitive' };
+    if(email) where.email = { contains: email, mode: 'insensitive' };
+    if(role) where.role   = role;
+
+    return this.prisma.user.findMany({
+      skip,
+      take,
+      where,
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase()
       }
-
-      if(name) where.name   = { contains: name, mode: 'insensitive' };
-      if(email) where.email = { contains: email, mode: 'insensitive' };
-      if(role) where.role   = role;
-
-      return this.prisma.user.findMany({
-         skip,
-         take,
-         where,
-         orderBy: {
-            [sortBy]: sortOrder.toLowerCase()
-         }
-      });
-   }
+    });
+  }
 
 }

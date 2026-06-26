@@ -1,6 +1,6 @@
 import { Body, Query, Controller, Get, Param, Patch, Post, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, UserResponseDto, ListUsersDto } from './dto';
-import { CreateUserUseCase, UpdateUserUseCase, ListUsersUseCase } from '../application';
+import { CreateUserUseCase, UpdateUserUseCase, ListUsersUseCase, FindUserUseCase } from '../application';
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
@@ -15,6 +15,7 @@ export class UsersController {
     private readonly createUser: CreateUserUseCase,
     private readonly listUsers: ListUsersUseCase,
     private readonly updateUser: UpdateUserUseCase,
+    private readonly findUser: FindUserUseCase
   ) { }
 
   @Post()
@@ -48,6 +49,16 @@ export class UsersController {
       sortOrder,
       filters
     });
+  }
+
+  @Get(':id')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+  @ApplySwagger(UsersSwagger.findById)
+  async findById(
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.findUser.execute(id);
   }
 
   @Patch(':id')

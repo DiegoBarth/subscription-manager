@@ -22,6 +22,16 @@ export const UsersSwagger = {
       { name: 'sortOrder', required: false, example: 'ASC' }
     ],
   },
+  findById: {
+    summary: 'Get user by ID',
+    bearerAuth: true,
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: UserResponseDto
+  },
   update: {
     summary: 'Update user by ID (Admin only)',
     bearerAuth: true,
