@@ -32,6 +32,11 @@ export const UsersSwagger = {
     },
     responseType: UserResponseDto
   },
+  me: {
+    summary: 'Get authenticated user',
+    bearerAuth: true,
+    responseType: UserResponseDto
+  },
   update: {
     summary: 'Update user by ID (Admin only)',
     bearerAuth: true,

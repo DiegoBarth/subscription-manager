@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersController } from './adapters';
 import { UsersRepository } from './infrastructure/repositories';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserUseCase, ListUsersUseCase, UpdateUserUseCase, FindUserUseCase } from './application';
+import { CreateUserUseCase, ListUsersUseCase, UpdateUserUseCase, FindUserUseCase, FindMeUserUseCase } from './application';
 
 @Module({
    controllers: [UsersController],
@@ -12,7 +12,8 @@ import { CreateUserUseCase, ListUsersUseCase, UpdateUserUseCase, FindUserUseCase
       CreateUserUseCase,
       ListUsersUseCase,
       UpdateUserUseCase,
-      FindUserUseCase
+      FindUserUseCase,
+      FindMeUserUseCase
    ],
    exports: [UsersRepository],
 })
