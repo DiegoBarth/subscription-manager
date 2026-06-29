@@ -1,9 +1,9 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../infrastructure/repositories';
+import { SubscriptionsRepository } from '../../infrastructure/repositories';
 import { CustomersRepository } from 'src/customer/infrastructure/repositories';
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
-import { SubscribeSubscriptionDto } from '../adapters/dto';
-import { SubscriptionStatus } from '../domain/enums';
+import { SubscribeSubscriptionDto } from '../../adapters/dto';
+import { SubscriptionStatus } from '../../domain/enums';
 
 @Injectable()
 export class SubscribeSubscriptionUseCase {

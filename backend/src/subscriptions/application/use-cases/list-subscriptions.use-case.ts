@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SubscriptionsRepository } from '../infrastructure/repositories';
-import { ListSubscriptionsParams } from './interfaces/list-subscriptions-params.interface';
+import { SubscriptionsRepository } from '../../infrastructure/repositories';
+import { ListSubscriptionsParams } from '../interfaces/list-subscriptions-params.interface';
 
 @Injectable()
 export class ListSubscriptionsUseCase {

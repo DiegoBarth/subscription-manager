@@ -1,6 +1,6 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { PlansRepository } from '../infrastructure/repositories';
-import { CreatePlanDto } from '../adapters/dto';
+import { PlansRepository } from '../../infrastructure/repositories';
+import { CreatePlanDto } from '../../adapters/dto';
 
 @Injectable()
 export class CreatePlanUseCase {

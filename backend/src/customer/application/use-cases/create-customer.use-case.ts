@@ -1,6 +1,6 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { CustomersRepository } from '../infrastructure/repositories';
-import { CreateCustomerDto } from '../adapters/dto';
+import { CustomersRepository } from '../../infrastructure/repositories';
+import { CreateCustomerDto } from '../../adapters/dto';
 
 @Injectable()
 export class CreateCustomerUseCase {

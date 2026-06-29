@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PlansRepository } from '../infrastructure/repositories';
-import { ListPlansParams } from './interfaces/list-plans-params.interface';
+import { PlansRepository } from '../../infrastructure/repositories';
+import { ListPlansParams } from '../interfaces/list-plans-params.interface';
 
 @Injectable()
 export class ListPlansUseCase {

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../infrastructure/repositories';
-import { UpdateSubscriptionDto } from '../adapters/dto';
+import { SubscriptionsRepository } from '../../infrastructure/repositories';
+import { UpdateSubscriptionDto } from '../../adapters/dto';
 
 @Injectable()
 export class UpdateSubscriptionUseCase {

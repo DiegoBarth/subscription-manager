@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CustomersRepository } from '../infrastructure/repositories';
-import { UpdateCustomerDto } from '../adapters/dto';
+import { CustomersRepository } from '../../infrastructure/repositories';
+import { UpdateCustomerDto } from '../../adapters/dto';
 
 @Injectable()
 export class UpdateCustomerUseCase {

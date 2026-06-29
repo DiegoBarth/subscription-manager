@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../infrastructure/repositories';
-import { CancelSubscriptionDto } from '../adapters/dto';
-import { SubscriptionStatus } from '../domain/enums';
+import { SubscriptionsRepository } from '../../infrastructure/repositories';
+import { CancelSubscriptionDto } from '../../adapters/dto';
+import { SubscriptionStatus } from '../../domain/enums';
 
 @Injectable()
 export class CancelSubscriptionUseCase {

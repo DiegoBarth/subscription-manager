@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../infrastructure/repositories';
+import { SubscriptionsRepository } from '../../infrastructure/repositories';
 
 @Injectable()
 export class FindSubscriptionUseCase {
