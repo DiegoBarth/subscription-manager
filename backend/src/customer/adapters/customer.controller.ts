@@ -6,6 +6,7 @@ import { SerializeInterceptor } from 'src/common/middlewares/response.intercepto
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { CustomersSwagger } from './customer.swagger';
+import { UserRole } from 'src/users/domain/enums';
 
 @Controller('customers')
 @ApiTags('Customers')
@@ -19,7 +20,7 @@ export class CustomersController {
   ) { }
 
   @Post()
-  @Auth('admin')
+  @Auth(UserRole.ADMIN)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.create)
   async create(@Body() dto: CreateCustomerDto, @AuthUser('id') userId: number) {
@@ -62,7 +63,7 @@ export class CustomersController {
   }
 
   @Patch(':id')
-  @Auth('admin')
+  @Auth(UserRole.ADMIN)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.update)
   async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCustomerDto) {

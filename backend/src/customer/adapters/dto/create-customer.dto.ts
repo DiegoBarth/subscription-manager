@@ -3,17 +3,16 @@ import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCustomerDto {
-
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }) => value.trim())
   @ApiProperty({ example: 'John Doe' })
-  name: string;
+  name!: string;
 
   @IsEmail()
   @Transform(({ value }) => value.trim())
   @ApiProperty({ example: 'john.doe@gmail.com' })
-  email: string;
+  email!: string;
 
   @IsOptional()
   @IsString()

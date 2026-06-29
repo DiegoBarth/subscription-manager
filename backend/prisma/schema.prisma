@@ -7,17 +7,42 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model user {
-  id            Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  password_hash String    @map("password_hash")
-  role          String
-  created_at    DateTime  @default(now()) @map("created_at")
-  updated_at    DateTime  @updatedAt @map("updated_at")
-  deleted_at    DateTime? @map("deleted_at")
+enum UserRole {
+  admin
+  customer
+}
 
-  customers     customer[]
+enum SubscriptionStatus {
+  active
+  canceled
+  expired
+  pending
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum PaymentMethod {
+  boleto
+  credit_card
+  debit_card
+  pix
+}
+
+model user {
+  id             Int       @id @default(autoincrement())
+  name           String
+  email          String    @unique
+  password_hash  String    @map("password_hash")
+  role           UserRole
+  created_at     DateTime  @default(now()) @map("created_at")
+  updated_at     DateTime  @updatedAt @map("updated_at")
+  deleted_at     DateTime? @map("deleted_at")
+  customer       customer?
   refresh_tokens refresh_token[]
 
   @@map("users")
@@ -25,67 +50,77 @@ model user {
 
 model customer {
   id            Int           @id @default(autoincrement())
-  user_id       Int           @map("user_id")
+  user_id       Int @unique   @map("user_id")
   name          String
   email         String
   phone         String?       
   created_at    DateTime      @default(now()) @map("created_at")
-  updated_at    DateTime     @updatedAt @map("updated_at")
+  updated_at    DateTime      @updatedAt @map("updated_at")
   deleted_at    DateTime?     @map("deleted_at")
 
   user          user          @relation(fields: [user_id], references: [id])
   subscriptions subscription[]
 
   @@map("customers")
+  @@index([user_id])
 }
 
 model plan {
-  id             Int           @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   name           String
   description    String?      
   price          Float
-  duration_months Int          @map("duration_months")
-  created_at     DateTime      @default(now()) @map("created_at")
+  duration_months Int         @map("duration_months")
+  is_active      Boolean      @default(true)
+  created_at     DateTime     @default(now()) @map("created_at")
   updated_at     DateTime     @updatedAt @map("updated_at")
-  deleted_at     DateTime?     @map("deleted_at")
+  deleted_at     DateTime?    @map("deleted_at")
 
   subscriptions  subscription[]
 
   @@map("plans")
+  @@index([is_active])
 }
 
 model subscription {
-  id            Int           @id @default(autoincrement())
-  customer_id   Int           @map("customer_id")
-  plan_id       Int           @map("plan_id")
-  start_date    DateTime      @map("start_date")
-  end_date      DateTime      @map("end_date")
-  status        String
-  created_at    DateTime      @default(now()) @map("created_at")
-  updated_at    DateTime     @updatedAt @map("updated_at")
-  deleted_at    DateTime?     @map("deleted_at")
+  id               Int           @id @default(autoincrement())
+  customer_id      Int           @map("customer_id")
+  plan_id          Int           @map("plan_id")
+  start_date       DateTime      @map("start_date")
+  end_date         DateTime      @map("end_date")
+  status           SubscriptionStatus
+  contracted_price Float         @map("contracted_price")
+  created_at       DateTime      @default(now()) @map("created_at")
+  updated_at       DateTime      @updatedAt @map("updated_at")
+  deleted_at       DateTime?     @map("deleted_at")
 
   customer      customer      @relation(fields: [customer_id], references: [id])
   plan          plan          @relation(fields: [plan_id], references: [id])
   payments      payment[]
 
   @@map("subscriptions")
+  @@index([customer_id])
+  @@index([plan_id])
+  @@index([status])
 }
 
 model payment {
-  id              Int           @id @default(autoincrement())
-  subscription_id Int           @map("subscription_id")
-  amount          Float
-  date            DateTime
-  status          String
-  payment_method  String        @map("payment_method")
-  created_at      DateTime      @default(now()) @map("created_at")
-  updated_at      DateTime     @updatedAt @map("updated_at")
-  deleted_at      DateTime?     @map(  "deleted_at")
-
-  subscription    subscription  @relation(fields: [subscription_id], references: [id])
+  id               Int       @id @default(autoincrement())
+  subscription_id  Int       @map("subscription_id")
+  amount           Float
+  due_date         DateTime  @map("due_date")
+  paid_at          DateTime? @map("paid_at")
+  status           PaymentStatus
+  payment_method   PaymentMethod?   @map("payment_method")
+  created_at       DateTime  @default(now()) @map("created_at")
+  updated_at       DateTime  @updatedAt @map("updated_at")
+  deleted_at       DateTime? @map("deleted_at")
+  subscription     subscription @relation(fields: [subscription_id], references: [id])
 
   @@map("payments")
+  @@index([subscription_id])
+  @@index([status])
+  @@index([due_date])
 }
 
 model refresh_token {
@@ -97,4 +132,5 @@ model refresh_token {
   expires_at DateTime
 
   @@map("refresh_tokens")
+  @@index([user_id])
 }

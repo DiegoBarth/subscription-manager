@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
@@ -18,7 +21,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:push": "prisma db push && prisma generate",
+    "db:reset": "prisma db push --force-reset && prisma generate && prisma db seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

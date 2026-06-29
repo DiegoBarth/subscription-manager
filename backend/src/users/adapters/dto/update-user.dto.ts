@@ -6,27 +6,27 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
 
-   @IsOptional()
-   @IsString()
-   @Transform(({ value }) => value.trim())
-   @ApiPropertyOptional({example: 'User Name'})
-   name?: string;
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value.trim())
+  @ApiPropertyOptional({ example: 'User Name' })
+  name?: string;
 
-   @IsOptional()
-   @IsEmail()
-   @Transform(({ value }) => value.trim())
-   @ApiPropertyOptional({example: 'user.name@gmail.com'})
-   email?: string;
+  @IsOptional()
+  @IsEmail()
+  @Transform(({ value }) => value.trim())
+  @ApiPropertyOptional({ example: 'user.name@gmail.com' })
+  email?: string;
 
-   @IsOptional()
-   @IsStrongPassword()
-   @ApiPropertyOptional({example: 'user_password'})
-   password?: string;
+  @IsOptional()
+  @IsStrongPassword()
+  @ApiPropertyOptional({ example: 'user_password' })
+  password?: string;
 
-   @IsOptional()
-   @IsString()
-   @IsIn(Object.values(UserRole))
-   @ApiPropertyOptional({example: 'admin'})
-   role?: string;
-   
+  @IsOptional()
+  @IsString()
+  @IsIn(Object.values(UserRole))
+  @ApiPropertyOptional({ example: UserRole.ADMIN })
+  role?: string;
+
 }

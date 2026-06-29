@@ -9,6 +9,6 @@ export class SubscribeSubscriptionDto {
     example: 2,
     description: 'ID of the plan the user wants to subscribe to',
   })
-  planId: number;
+  planId!: number;
 
 }

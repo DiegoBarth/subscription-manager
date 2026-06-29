@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSubscriptionDto, UpdateSubscriptionDto } from 'src/subscriptions/adapters/dto';
 import { FindSubscriptionsParams } from 'src/subscriptions/domain/interfaces/find-subscriptions-params.interface';
@@ -15,7 +16,8 @@ export class SubscriptionsRepository {
         plan_id: data.planId,
         start_date: new Date(data.startDate),
         end_date: new Date(data.endDate),
-        status: data.status ?? 'active'
+        status: data.status ?? SubscriptionStatus.ACTIVE,
+        contracted_price: 10
       }
     });
   }
@@ -49,7 +51,7 @@ export class SubscriptionsRepository {
     return this.prisma.subscription.findFirst({
       where: {
         customer_id: customerId,
-        status: 'active',
+        status: SubscriptionStatus.ACTIVE,
         deleted_at: null
       }
     });
@@ -61,7 +63,7 @@ export class SubscriptionsRepository {
     take: number
     sortBy: string
     sortOrder: 'ASC' | 'DESC'
-    status?: string
+    status?: SubscriptionStatus
   }) {
 
     const { customerId, skip, take, sortBy, sortOrder, status } = params;

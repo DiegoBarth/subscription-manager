@@ -3,12 +3,11 @@ import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePlanDto {
-
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }) => value.trim())
   @ApiProperty({ example: 'Premium Plan' })
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
@@ -20,11 +19,11 @@ export class CreatePlanDto {
   @IsNumber()
   @Min(0)
   @ApiProperty({ example: 49.9 })
-  price: number;
+  price!: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
   @ApiProperty({ example: 12 })
-  durationMonths: number;
+  durationMonths!: number;
 }

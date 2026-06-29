@@ -1,5 +1,6 @@
 import { IsOptional, IsNumberString, IsIn, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
 
 export class ListUserSubscriptionsDto {
 
@@ -31,5 +32,5 @@ export class ListUserSubscriptionsDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ example: 'active' })
-  status?: string;
+  status?: SubscriptionStatus;
 }

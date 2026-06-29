@@ -1,3 +1,4 @@
+import { UserRole } from "src/users/domain/enums";
 import {
   CreateSubscriptionDto,
   UpdateSubscriptionDto,
@@ -12,14 +13,14 @@ export const SubscriptionsSwagger = {
     summary: 'Create a new subscription (Admin only)',
     bearerAuth: true,
     bodyType: CreateSubscriptionDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     responseType: SubscriptionResponseDto
   },
 
   findAll: {
     summary: 'List all subscriptions (Admin only)',
     bearerAuth: true,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     responseType: SubscriptionResponseDto,
     queryParams: [
       { name: 'page', required: false, example: 1 },
@@ -36,7 +37,7 @@ export const SubscriptionsSwagger = {
   findById: {
     summary: 'Get subscription by ID (Admin only)',
     bearerAuth: true,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     param: {
       name: 'id',
       type: Number,
@@ -49,7 +50,7 @@ export const SubscriptionsSwagger = {
     summary: 'Update subscription by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdateSubscriptionDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     param: {
       name: 'id',
       type: Number,

@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { PlansSwagger } from './plans.swagger';
 import { Auth } from 'src/common/decorators';
+import { UserRole } from 'src/users/domain/enums';
 
 @Controller('plans')
 @ApiTags('Plans')
@@ -19,7 +20,7 @@ export class PlansController {
   ) { }
 
   @Post()
-  @Auth('admin')
+  @Auth(UserRole.ADMIN)
   @UseInterceptors(new SerializeInterceptor(PlanResponseDto))
   @ApplySwagger(PlansSwagger.create)
   async create(@Body() dto: CreatePlanDto) {
@@ -62,7 +63,7 @@ export class PlansController {
   }
 
   @Patch(':id')
-  @Auth('admin')
+  @Auth(UserRole.ADMIN)
   @UseInterceptors(new SerializeInterceptor(PlanResponseDto))
   @ApplySwagger(PlansSwagger.update)
   async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePlanDto) {

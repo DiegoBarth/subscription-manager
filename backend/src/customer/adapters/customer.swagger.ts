@@ -1,3 +1,4 @@
+import { UserRole } from 'src/users/domain/enums';
 import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from './dto';
 
 export const CustomersSwagger = {
@@ -5,7 +6,7 @@ export const CustomersSwagger = {
     summary: 'Create a new customer (Admin only)',
     bearerAuth: true,
     bodyType: CreateCustomerDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     responseType: CustomerResponseDto,
   },
   findAll: {
@@ -34,7 +35,7 @@ export const CustomersSwagger = {
     summary: 'Update customer by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdateCustomerDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     param: {
       name: 'id',
       type: Number,

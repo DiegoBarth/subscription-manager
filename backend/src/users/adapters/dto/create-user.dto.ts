@@ -5,26 +5,24 @@ import { UserRole } from 'src/users/domain/enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @IsNotEmpty()
+  @IsString()
+  @Transform(({ value }) => value.trim())
+  @ApiProperty({ example: 'User Name' })
+  name!: string;
 
-   @IsNotEmpty()
-   @IsString()
-   @Transform(({ value }) => value.trim())
-   @ApiProperty({example: 'User Name'})
-   name: string;
+  @IsEmail()
+  @Transform(({ value }) => value.trim())
+  @ApiProperty({ example: 'user.name@gmail.com' })
+  email!: string;
 
-   @IsEmail()
-   @Transform(({ value }) => value.trim())
-   @ApiProperty({example: 'user.name@gmail.com'})
-   email: string;
+  @IsStrongPassword()
+  @ApiProperty({ example: 'user_password' })
+  password!: string;
 
-   @IsStrongPassword()
-   @ApiProperty({example: 'user_password'})
-   password: string;
-
-   @IsNotEmpty()
-   @IsString()
-   @IsIn(Object.values(UserRole))
-   @ApiProperty({example: 'admin'})
-   role: string;
-   
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(Object.values(UserRole))
+  @ApiProperty({ example: UserRole.ADMIN, enum: UserRole })
+  role!: UserRole;
 }

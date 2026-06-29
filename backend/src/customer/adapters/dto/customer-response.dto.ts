@@ -5,15 +5,15 @@ export class CustomerResponseDto {
 
   @Expose()
   @ApiProperty({ example: 10 })
-  id: number;
+  id!: number;
 
   @Expose()
   @ApiProperty({ example: 'John Doe' })
-  name: string;
+  name!: string;
 
   @Expose()
   @ApiProperty({ example: 'john.doe@gmail.com' })
-  email: string;
+  email!: string;
 
   @Expose()
   @ApiProperty({ example: '+55 11 99999-9999', required: false })
@@ -21,16 +21,16 @@ export class CustomerResponseDto {
 
   @Expose()
   @ApiProperty({ example: 1 })
-  userId: number;
+  userId!: number;
 
   @Expose()
   @Transform(({ value }) => value?.toISOString())
   @ApiProperty({ example: '2025-07-29T19:37:05.464Z' })
-  created_at: Date;
+  created_at!: Date;
 
   @Expose()
   @ApiProperty({ example: '2025-07-29T19:37:05.464Z' })
-  updated_at: Date;
+  updated_at!: Date;
 
   @Exclude()
   deleted_at?: Date;

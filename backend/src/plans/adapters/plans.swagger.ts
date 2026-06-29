@@ -1,3 +1,4 @@
+import { UserRole } from "src/users/domain/enums";
 import { CreatePlanDto, UpdatePlanDto, PlanResponseDto } from "./dto";
 
 export const PlansSwagger = {
@@ -5,7 +6,7 @@ export const PlansSwagger = {
     summary: 'Create a new plan (Admin only)',
     bearerAuth: true,
     bodyType: CreatePlanDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     responseType: PlanResponseDto
   },
   findAll: {
@@ -34,7 +35,7 @@ export const PlansSwagger = {
     summary: 'Update plan by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdatePlanDto,
-    roles: ['admin'],
+    roles: [UserRole.ADMIN],
     param: {
       name: 'id',
       type: Number,
