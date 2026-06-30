@@ -8,11 +8,13 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { CustomerModule } from './customer/customer.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
    imports: [
       ConfigModule.forRoot({ isGlobal: true }),
       UsersModule,
+      PaymentsModule,
       PlansModule,
       SubscriptionsModule,
       CustomerModule,

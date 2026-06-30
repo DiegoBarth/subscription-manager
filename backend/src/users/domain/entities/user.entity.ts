@@ -3,13 +3,13 @@ import { UserRole } from '../enums';
 
 export class UserEntity {
 
-  id!: string;
+  id!: number;
   name!: string;
   email!: string;
-  role!: string;
+  role!: UserRole;
 
   @Exclude()
-  password!: string;
+  password_hash!: string;
 
   createdAt!: Date;
   updatedAt!: Date;

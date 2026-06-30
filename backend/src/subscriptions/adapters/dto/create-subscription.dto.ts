@@ -22,12 +22,12 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   @IsDateString()
   @ApiProperty({ example: '2026-03-12' })
-  startDate!: string;
+  startDate!: Date;
 
   @IsNotEmpty()
   @IsDateString()
   @ApiProperty({ example: '2027-03-12' })
-  endDate!: string;
+  endDate!: Date;
 
   @IsOptional()
   @IsEnum(SubscriptionStatus)

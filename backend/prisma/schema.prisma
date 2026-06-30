@@ -66,15 +66,15 @@ model customer {
 }
 
 model plan {
-  id             Int          @id @default(autoincrement())
-  name           String
-  description    String?      
-  price          Float
-  duration_months Int         @map("duration_months")
-  is_active      Boolean      @default(true)
-  created_at     DateTime     @default(now()) @map("created_at")
-  updated_at     DateTime     @updatedAt @map("updated_at")
-  deleted_at     DateTime?    @map("deleted_at")
+  id              Int          @id @default(autoincrement())
+  name            String
+  description     String?      
+  price           Int
+  duration_months Int          @map("duration_months")
+  is_active       Boolean      @default(true)
+  created_at      DateTime     @default(now()) @map("created_at")
+  updated_at      DateTime     @updatedAt @map("updated_at")
+  deleted_at      DateTime?    @map("deleted_at")
 
   subscriptions  subscription[]
 
@@ -89,7 +89,7 @@ model subscription {
   start_date       DateTime      @map("start_date")
   end_date         DateTime      @map("end_date")
   status           SubscriptionStatus
-  contracted_price Float         @map("contracted_price")
+  contracted_price Int           @map("contracted_price")
   created_at       DateTime      @default(now()) @map("created_at")
   updated_at       DateTime      @updatedAt @map("updated_at")
   deleted_at       DateTime?     @map("deleted_at")
@@ -107,7 +107,7 @@ model subscription {
 model payment {
   id               Int       @id @default(autoincrement())
   subscription_id  Int       @map("subscription_id")
-  amount           Float
+  amount           Int
   due_date         DateTime  @map("due_date")
   paid_at          DateTime? @map("paid_at")
   status           PaymentStatus

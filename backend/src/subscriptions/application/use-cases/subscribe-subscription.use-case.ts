@@ -42,9 +42,10 @@ export class SubscribeSubscriptionUseCase {
     return this.subscriptionsRepo.create({
       customerId,
       planId: dto.planId,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      status: SubscriptionStatus.ACTIVE
+      startDate,
+      endDate,
+      status: SubscriptionStatus.ACTIVE,
+      contractedPrice: plan.price,
     });
   }
 }

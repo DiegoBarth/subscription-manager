@@ -1,12 +1,16 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
 import { CustomersRepository } from 'src/customer/infrastructure/repositories';
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
 import { CreateSubscriptionDto } from '../../adapters/dto';
+import { SubscriptionStatus } from '../../domain/enums';
 
 @Injectable()
 export class CreateSubscriptionUseCase {
-
   constructor(
     private readonly subscriptionsRepo: SubscriptionsRepository,
     private readonly customersRepo: CustomersRepository,
@@ -14,7 +18,6 @@ export class CreateSubscriptionUseCase {
   ) { }
 
   async execute(data: CreateSubscriptionDto) {
-
     const customer = await this.customersRepo.findById(data.customerId);
 
     if (!customer) {
@@ -27,17 +30,22 @@ export class CreateSubscriptionUseCase {
       throw new NotFoundException('Plan not found');
     }
 
-    const existingSubscription = await this.subscriptionsRepo.findActiveByCustomer(data.customerId);
+    const existingSubscription =
+      await this.subscriptionsRepo.findActiveByCustomer(data.customerId);
 
     if (existingSubscription) {
-      throw new ConflictException('Customer already has an active subscription');
+      throw new ConflictException(
+        'Customer already has an active subscription',
+      );
     }
 
     return this.subscriptionsRepo.create({
-      ...data,
-      startDate: data.startDate ?? new Date(),
+      customerId: data.customerId,
+      planId: data.planId,
+      startDate: new Date(data.startDate),
+      endDate: new Date(data.endDate),
+      status: data.status ?? SubscriptionStatus.ACTIVE,
+      contractedPrice: plan.price
     });
-
   }
-
 }

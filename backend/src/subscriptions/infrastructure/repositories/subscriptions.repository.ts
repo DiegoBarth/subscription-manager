@@ -9,7 +9,14 @@ export class SubscriptionsRepository {
 
   constructor(private readonly prisma: PrismaService) { }
 
-  create(data: CreateSubscriptionDto) {
+  create(data: {
+    customerId: number;
+    planId: number;
+    startDate: Date;
+    endDate: Date;
+    status: SubscriptionStatus;
+    contractedPrice: number;
+  }) {
     return this.prisma.subscription.create({
       data: {
         customer_id: data.customerId,
@@ -17,7 +24,7 @@ export class SubscriptionsRepository {
         start_date: new Date(data.startDate),
         end_date: new Date(data.endDate),
         status: data.status ?? SubscriptionStatus.ACTIVE,
-        contracted_price: 10
+        contracted_price: data.contractedPrice
       }
     });
   }

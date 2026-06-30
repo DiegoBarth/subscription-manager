@@ -33,6 +33,11 @@ export class SubscriptionResponseDto {
   status!: string;
 
   @Expose()
+  @Transform(({ value }) => value / 100)
+  @ApiProperty({ example: 49.90 })
+  contracted_price!: number;
+
+  @Expose()
   @Transform(({ value }) => value?.toISOString())
   @ApiProperty({ example: '2026-03-12T10:00:00.000Z' })
   created_at!: Date;

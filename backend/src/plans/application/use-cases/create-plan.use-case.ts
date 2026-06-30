@@ -14,6 +14,9 @@ export class CreatePlanUseCase {
       throw new ConflictException('Plan name already exists');
     }
 
-    return this.plansRepo.create(data);
+    return this.plansRepo.create({
+      ...data,
+      price: Math.round(data.price * 100),
+    });
   }
 }

@@ -1,18 +1,19 @@
 import { Exclude } from 'class-transformer';
+import { SubscriptionStatus } from '../enums';
 
 export class SubscriptionEntity {
 
-  id: number;
-  customerId: number;
-  planId: number;
+  id!: number;
+  customerId!: number;
+  planId!: number;
 
-  startDate: Date;
-  endDate: Date;
+  startDate!: Date;
+  endDate!: Date;
 
-  status: string;
+  status!: SubscriptionStatus;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   @Exclude()
   deletedAt?: Date;
@@ -22,17 +23,18 @@ export class SubscriptionEntity {
   }
 
   isActive(): boolean {
-    return this.status === 'active';
+    return this.status === SubscriptionStatus.ACTIVE;
   }
 
   isExpired(): boolean {
-    if (!this.endDate) return false;
-
-    return new Date() > this.endDate;
+    return (
+      this.status === SubscriptionStatus.EXPIRED ||
+      new Date() > this.endDate
+    );
   }
 
   get isValid(): boolean {
-    return this.status === 'active' && !this.isExpired();
+    return this.status === SubscriptionStatus.ACTIVE && !this.isExpired();
   }
 
 }

@@ -16,6 +16,7 @@ export class PlanResponseDto {
   description?: string;
 
   @Expose()
+  @Transform(({ value }) => value / 100)
   @ApiProperty({ example: 49.9 })
   price!: number;
 
