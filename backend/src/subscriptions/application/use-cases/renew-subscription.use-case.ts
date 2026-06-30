@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
 import { PaymentsRepository } from 'src/payments/infrastructure/repositories';
@@ -15,7 +15,6 @@ export class RenewSubscriptionUseCase {
   ) { }
 
   async execute(subscriptionId: number) {
-
     const subscription = await this.subscriptionsRepo.findById(subscriptionId);
 
     if (!subscription) {
@@ -32,6 +31,13 @@ export class RenewSubscriptionUseCase {
 
     const newEndDate = new Date(currentEndDate);
     newEndDate.setMonth(newEndDate.getMonth() + plan.duration_months);
+
+    const existingPayment =
+      await this.paymentsRepo.findPendingBySubscriptionId(subscriptionId);
+
+    if (existingPayment) {
+      throw new ConflictException('Subscription already has a pending payment');
+    }
 
     const updatedSubscription = await this.subscriptionsRepo.update(subscriptionId, {
       endDate: newEndDate,
