@@ -27,7 +27,8 @@ import {
   SubscribeSubscriptionUseCase,
   CancelSubscriptionUseCase,
   ListUserSubscriptionsUseCase,
-  FindSubscriptionUseCase
+  FindSubscriptionUseCase,
+  RenewSubscriptionUseCase 
 } from '../application';
 
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
@@ -49,6 +50,7 @@ export class SubscriptionsController {
     private readonly subscribeSubscription: SubscribeSubscriptionUseCase,
     private readonly cancelSubscription: CancelSubscriptionUseCase,
     private readonly listUserSubscriptions: ListUserSubscriptionsUseCase,
+    private readonly renewSubscription: RenewSubscriptionUseCase
   ) { }
 
   /*
@@ -104,6 +106,16 @@ export class SubscriptionsController {
     @Body() dto: UpdateSubscriptionDto
   ) {
     return this.updateSubscription.execute(id, dto);
+  }
+
+  @Patch(':id/renew')
+  @Auth(UserRole.ADMIN)
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.renew)
+  async renew(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.renewSubscription.execute(id);
   }
 
   /*

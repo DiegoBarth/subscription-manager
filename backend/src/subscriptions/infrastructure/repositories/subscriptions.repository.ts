@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateSubscriptionDto, UpdateSubscriptionDto } from 'src/subscriptions/adapters/dto';
 import { FindSubscriptionsParams } from 'src/subscriptions/domain/interfaces/find-subscriptions-params.interface';
+import { UpdateSubscriptionData } from '../../application/interfaces/update-subscription-data.interface';
 
 @Injectable()
 export class SubscriptionsRepository {
@@ -29,7 +29,11 @@ export class SubscriptionsRepository {
     });
   }
 
-  update(id: number, data: UpdateSubscriptionDto) {
+  update(
+    id: number,
+    data: UpdateSubscriptionData,
+  ) {
+
     const prismaData: any = { ...data };
 
     if (prismaData.planId) {
@@ -37,15 +41,28 @@ export class SubscriptionsRepository {
       delete prismaData.planId;
     }
 
+    if (prismaData.startDate) {
+      prismaData.start_date = prismaData.startDate;
+      delete prismaData.startDate;
+    }
+
     if (prismaData.endDate) {
-      prismaData.end_date = new Date(prismaData.endDate);
+      prismaData.end_date = prismaData.endDate;
       delete prismaData.endDate;
     }
 
+    if (prismaData.contractedPrice) {
+      prismaData.contracted_price = prismaData.contractedPrice;
+      delete prismaData.contractedPrice;
+    }
+
     return this.prisma.subscription.update({
-      where: { id },
-      data: prismaData
+      where: {
+        id,
+      },
+      data: prismaData,
     });
+
   }
 
   findById(id: number) {

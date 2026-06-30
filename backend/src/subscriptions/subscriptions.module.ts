@@ -10,15 +10,18 @@ import {
   CancelSubscriptionUseCase,
   ListUserSubscriptionsUseCase,
   SubscribeSubscriptionUseCase,
-  FindSubscriptionUseCase
+  FindSubscriptionUseCase,
+  RenewSubscriptionUseCase
 } from './application';
 
 import { CustomerModule } from 'src/customer/customer.module';
 import { PlansModule } from 'src/plans/plans.module';
+import { PaymentsModule } from 'src/payments/payments.module';
 
 @Module({
   imports: [
     CustomerModule,
+    PaymentsModule,
     PlansModule
   ],
   controllers: [SubscriptionsController],
@@ -31,7 +34,8 @@ import { PlansModule } from 'src/plans/plans.module';
     CancelSubscriptionUseCase,
     ListUserSubscriptionsUseCase,
     SubscribeSubscriptionUseCase,
-    FindSubscriptionUseCase
+    FindSubscriptionUseCase,
+    RenewSubscriptionUseCase
   ],
   exports: [SubscriptionsRepository],
 })

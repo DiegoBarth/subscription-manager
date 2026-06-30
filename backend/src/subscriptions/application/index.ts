@@ -5,3 +5,4 @@ export * from './use-cases/cancel-subscription.use-case';
 export * from './use-cases/list-subscriptions.use-case';
 export * from './use-cases/list-user-subscriptions.use-case';
 export * from './use-cases/find-subscription.use-case';
+export * from './use-cases/renew-subscription.use-case';

@@ -89,6 +89,18 @@ export const SubscriptionsSwagger = {
       { name: 'sortBy', required: false, example: 'created_at' },
       { name: 'sortOrder', required: false, example: 'DESC' }
     ]
+  },
+
+  renew: {
+    summary: 'Renew subscription (Admin only)',
+    bearerAuth: true,
+    roles: [UserRole.ADMIN],
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: SubscriptionResponseDto
   }
 
 };
