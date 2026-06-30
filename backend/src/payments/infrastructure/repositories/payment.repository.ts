@@ -38,6 +38,11 @@ export class PaymentsRepository {
       delete prismaData.paidAt;
     }
 
+    if (prismaData.refundedAt !== undefined) {
+      prismaData.refunded_at = prismaData.refundedAt;
+      delete prismaData.refundedAt;
+    }
+
     return this.prisma.payment.update({
       where: { id },
       data: prismaData,

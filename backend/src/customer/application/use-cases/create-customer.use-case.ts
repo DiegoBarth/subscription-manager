@@ -7,11 +7,10 @@ export class CreateCustomerUseCase {
 
   constructor(private readonly customersRepo: CustomersRepository) { }
 
-  async execute(userId: number, data: CreateCustomerDto) {  // <-- recebe userId do controller
-    // Verifica se já existe um cliente com o mesmo email para o mesmo usuário
+  async execute(userId: number, data: CreateCustomerDto) {
     const existingCustomers = await this.customersRepo.findAll({
       email: data.email,
-      userId  // filtra pelo userId
+      userId
     });
 
     if (existingCustomers.length > 0) {
@@ -20,7 +19,7 @@ export class CreateCustomerUseCase {
 
     return this.customersRepo.create({
       ...data,
-      userId   // adiciona userId aqui para o repository
+      userId
     });
   }
 }

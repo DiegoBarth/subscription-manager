@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
-import { CancelSubscriptionDto } from '../../adapters/dto';
 import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
 
 @Injectable()
@@ -12,8 +11,7 @@ export class CancelSubscriptionUseCase {
 
   async execute(
     subscriptionId: number,
-    customerId: number,
-    dto: CancelSubscriptionDto
+    customerId: number
   ) {
 
     const subscription = await this.subscriptionsRepo.findById(subscriptionId);

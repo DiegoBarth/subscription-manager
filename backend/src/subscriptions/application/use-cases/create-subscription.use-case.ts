@@ -62,7 +62,7 @@ export class CreateSubscriptionUseCase {
         startDate,
         endDate,
         status: SubscriptionStatus.ACTIVE,
-        contractedPrice: Math.round(plan.price * 100),
+        contractedPrice: plan.price,
       });
 
     await this.billingService.createSubscriptionPayment(

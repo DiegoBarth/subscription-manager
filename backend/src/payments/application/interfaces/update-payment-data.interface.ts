@@ -6,5 +6,6 @@ export interface UpdatePaymentData {
   dueDate?: Date;
   paymentMethod?: PaymentMethod;
   paidAt?: Date;
+  refundedAt?: Date;
   status?: PaymentStatus;
 }

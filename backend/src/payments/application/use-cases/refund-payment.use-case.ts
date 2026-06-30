@@ -41,6 +41,7 @@ export class RefundPaymentUseCase {
 
     return this.paymentsRepo.update(id, {
       status: PaymentStatus.REFUNDED,
+      refundedAt: new Date()
     });
   }
 

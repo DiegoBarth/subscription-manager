@@ -110,6 +110,7 @@ model payment {
   amount           Int
   due_date         DateTime  @map("due_date")
   paid_at          DateTime? @map("paid_at")
+  refunded_at      DateTime? @map("refunded_at")
   status           PaymentStatus
   payment_method   PaymentMethod?   @map("payment_method")
   created_at       DateTime  @default(now()) @map("created_at")

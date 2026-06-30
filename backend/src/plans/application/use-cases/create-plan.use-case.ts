@@ -16,7 +16,7 @@ export class CreatePlanUseCase {
 
     return this.plansRepo.create({
       ...data,
-      price: Math.round(data.price * 100),
+      price: data.price,
     });
   }
 }

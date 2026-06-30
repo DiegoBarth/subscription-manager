@@ -179,10 +179,9 @@ export class SubscriptionsController {
   @ApplySwagger(SubscriptionsSwagger.cancel)
   async cancel(
     @Param('id', ParseIntPipe) id: number,
-    @AuthUser() user: any,
-    @Body() dto: CancelSubscriptionDto
+    @AuthUser() user: any
   ) {
-    return this.cancelSubscription.execute(id, user.id, dto);
+    return this.cancelSubscription.execute(id, user.id);
   }
 
 }

@@ -54,7 +54,4 @@ export class PaymentEntity {
     this.paidAt = new Date();
   }
 
-  get amountInReais(): number {
-    return this.amount / 100;
-  }
 }
