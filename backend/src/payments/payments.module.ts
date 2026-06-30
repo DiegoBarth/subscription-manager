@@ -1,21 +1,18 @@
 import { Module } from '@nestjs/common';
 import { PaymentsController } from './adapters';
-import { PaymentsRepository } from './infrastructure/repositories';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePaymentUseCase, ListPaymentsUseCase, UpdatePaymentUseCase, FindPaymentUseCase, MarkPaymentAsPaidUseCase, RefundPaymentUseCase } from './application';
+import { BillingModule } from 'src/billing/billing.module';
 
 @Module({
-   controllers: [PaymentsController],
-   providers: [
-      PaymentsRepository,
-      PrismaService,
-      CreatePaymentUseCase,
-      ListPaymentsUseCase,
-      UpdatePaymentUseCase,
-      FindPaymentUseCase,
-      MarkPaymentAsPaidUseCase,
-      RefundPaymentUseCase
-   ],
-   exports: [PaymentsRepository],
+  imports: [BillingModule],
+  controllers: [PaymentsController],
+  providers: [
+    CreatePaymentUseCase,
+    ListPaymentsUseCase,
+    UpdatePaymentUseCase,
+    FindPaymentUseCase,
+    MarkPaymentAsPaidUseCase,
+    RefundPaymentUseCase,
+  ],
 })
-export class PaymentsModule { }
+export class PaymentsModule {}

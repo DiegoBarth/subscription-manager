@@ -3,13 +3,16 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
+
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
 import { CustomersRepository } from 'src/customer/infrastructure/repositories';
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
+
 import { CreateSubscriptionDto } from '../../adapters/dto';
+
 import { SubscriptionStatus } from '../../domain/enums';
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
-import { PaymentsRepository } from 'src/payments/infrastructure/repositories';
+
+import { BillingService } from 'src/billing/application/services/billing.service';
 
 @Injectable()
 export class CreateSubscriptionUseCase {
@@ -17,8 +20,8 @@ export class CreateSubscriptionUseCase {
     private readonly subscriptionsRepo: SubscriptionsRepository,
     private readonly customersRepo: CustomersRepository,
     private readonly plansRepo: PlansRepository,
-    private readonly paymentsRepo: PaymentsRepository
-  ) { }
+    private readonly billingService: BillingService,
+  ) {}
 
   async execute(data: CreateSubscriptionDto) {
     const customer = await this.customersRepo.findById(data.customerId);
@@ -34,7 +37,9 @@ export class CreateSubscriptionUseCase {
     }
 
     const existingSubscription =
-      await this.subscriptionsRepo.findActiveByCustomer(data.customerId);
+      await this.subscriptionsRepo.findActiveByCustomer(
+        data.customerId,
+      );
 
     if (existingSubscription) {
       throw new ConflictException(
@@ -45,30 +50,26 @@ export class CreateSubscriptionUseCase {
     const startDate = new Date();
 
     const endDate = new Date();
-    endDate.setMonth(endDate.getMonth() + plan.duration_months);
 
-    const subscription = await this.subscriptionsRepo.create({
-      customerId: data.customerId,
-      planId: data.planId,
-      startDate,
+    endDate.setMonth(
+      endDate.getMonth() + plan.duration_months,
+    );
+
+    const subscription =
+      await this.subscriptionsRepo.create({
+        customerId: data.customerId,
+        planId: data.planId,
+        startDate,
+        endDate,
+        status: SubscriptionStatus.ACTIVE,
+        contractedPrice: Math.round(plan.price * 100),
+      });
+
+    await this.billingService.createSubscriptionPayment(
+      subscription.id,
+      subscription.contracted_price,
       endDate,
-      status: SubscriptionStatus.ACTIVE,
-      contractedPrice: plan.price,
-    });
-
-    const existingPayment =
-      await this.paymentsRepo.findPendingBySubscriptionId(subscription.id);
-
-    if (existingPayment) {
-      throw new ConflictException('Subscription already has a pending payment');
-    }
-
-    await this.paymentsRepo.create({
-      subscriptionId: subscription.id,
-      amount: plan.price,
-      dueDate: endDate,
-      status: PaymentStatus.PENDING,
-    });
+    );
 
     return subscription;
   }

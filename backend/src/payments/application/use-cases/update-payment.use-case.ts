@@ -23,16 +23,21 @@ export class UpdatePaymentUseCase {
       throw new NotFoundException(`Payment with id ${id} not found`);
     }
 
-    if (payment.status === PaymentStatus.PAID) {
-      throw new BadRequestException(
-        'Paid payments cannot be updated',
-      );
-    }
+    switch (payment.status) {
+      case PaymentStatus.PAID:
+        throw new BadRequestException(
+          'Paid payments cannot be updated',
+        );
 
-    if (payment.status === PaymentStatus.REFUNDED) {
-      throw new BadRequestException(
-        'Refunded payments cannot be updated',
-      );
+      case PaymentStatus.REFUNDED:
+        throw new BadRequestException(
+          'Refunded payments cannot be updated',
+        );
+
+      case PaymentStatus.FAILED:
+        throw new BadRequestException(
+          'Failed payments cannot be updated',
+        );
     }
 
     return this.paymentsRepo.update(id, {

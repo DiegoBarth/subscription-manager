@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionsController } from './adapters';
-import { SubscriptionsRepository } from './infrastructure/repositories';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 import {
   CreateSubscriptionUseCase,
@@ -16,27 +14,24 @@ import {
 
 import { CustomerModule } from 'src/customer/customer.module';
 import { PlansModule } from 'src/plans/plans.module';
-import { PaymentsModule } from 'src/payments/payments.module';
+import { BillingModule } from 'src/billing/billing.module';
 
 @Module({
   imports: [
+    BillingModule,
     CustomerModule,
-    PaymentsModule,
-    PlansModule
+    PlansModule,
   ],
   controllers: [SubscriptionsController],
   providers: [
-    SubscriptionsRepository,
-    PrismaService,
     CreateSubscriptionUseCase,
     ListSubscriptionsUseCase,
     UpdateSubscriptionUseCase,
     CancelSubscriptionUseCase,
+    RenewSubscriptionUseCase,
+    FindSubscriptionUseCase,
     ListUserSubscriptionsUseCase,
     SubscribeSubscriptionUseCase,
-    FindSubscriptionUseCase,
-    RenewSubscriptionUseCase
   ],
-  exports: [SubscriptionsRepository],
 })
-export class SubscriptionsModule { }
+export class SubscriptionsModule {}
