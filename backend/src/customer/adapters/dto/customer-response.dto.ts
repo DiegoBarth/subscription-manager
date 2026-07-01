@@ -1,5 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { CustomerStatus } from '@prisma/client';
 
 export class CustomerResponseDto {
 
@@ -16,12 +17,17 @@ export class CustomerResponseDto {
   email!: string;
 
   @Expose()
+  @Transform(({ value }) => value ?? undefined)
   @ApiProperty({ example: '+55 11 99999-9999', required: false })
   phone?: string;
 
   @Expose()
   @ApiProperty({ example: 1 })
-  userId!: number;
+  user_id!: number;
+
+  @Expose()
+  @ApiProperty({ example: true })
+  status!: CustomerStatus;
 
   @Expose()
   @Transform(({ value }) => value?.toISOString())

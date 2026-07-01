@@ -13,7 +13,7 @@ export const UsersSwagger = {
     responseType: UserResponseDto
   },
   findAll: {
-    summary: 'List all users (Paginated)',
+    summary: 'List all users - Paginated (Admin only)',
     bearerAuth: true,
     responseType: UserResponseDto,
     queryParams: [
@@ -27,7 +27,7 @@ export const UsersSwagger = {
     ],
   },
   findById: {
-    summary: 'Get user by ID',
+    summary: 'Get user by ID (Admin only)',
     bearerAuth: true,
     param: {
       name: 'id',
@@ -66,19 +66,19 @@ export const UsersSwagger = {
     responseType: SuccessResponseDto
   },
   resetPassword: {
-    summary: 'Reset user password',
+    summary: 'Reset user password (Admin only)',
     bearerAuth: true,
     bodyType: ResetPasswordDto,
     responseType: SuccessResponseDto,
   },
   updateStatus: {
-    summary: 'Activate or deactivate a user',
+    summary: 'Activate or deactivate a user (Admin only)',
     bearerAuth: true,
     bodyType: UpdateUserStatusDto,
     responseType: SuccessResponseDto,
   },
   delete: {
-    summary: 'Delete user',
+    summary: 'Delete user (Admin only)',
     bearerAuth: true,
     responseType: SuccessResponseDto,
   }

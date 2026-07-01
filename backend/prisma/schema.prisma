@@ -19,6 +19,13 @@ enum UserStatus {
   pending
 }
 
+enum CustomerStatus {
+  active
+  inactive
+  blocked
+  pending
+}
+
 enum SubscriptionStatus {
   active
   canceled
@@ -57,14 +64,15 @@ model user {
 }
 
 model customer {
-  id            Int           @id @default(autoincrement())
-  user_id       Int @unique   @map("user_id")
+  id            Int            @id @default(autoincrement())
+  user_id       Int @unique    @map("user_id")
   name          String
   email         String
-  phone         String?       
-  created_at    DateTime      @default(now()) @map("created_at")
-  updated_at    DateTime      @updatedAt @map("updated_at")
-  deleted_at    DateTime?     @map("deleted_at")
+  phone         String?
+  status        CustomerStatus @default(active)       
+  created_at    DateTime       @default(now()) @map("created_at")
+  updated_at    DateTime       @updatedAt @map("updated_at")
+  deleted_at    DateTime?      @map("deleted_at")
 
   user          user          @relation(fields: [user_id], references: [id])
   subscriptions subscription[]

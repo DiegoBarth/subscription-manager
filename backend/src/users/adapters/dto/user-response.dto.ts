@@ -1,6 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { isBoolean, IsIn } from 'class-validator';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole, UserStatus } from 'src/users/domain/enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserResponseDto {
@@ -24,7 +24,7 @@ export class UserResponseDto {
 
   @Expose()
   @ApiProperty({ example: true })
-  status!: boolean;
+  status!: UserStatus;
 
   @Expose()
   @Transform(({ value }) => value?.toISOString())

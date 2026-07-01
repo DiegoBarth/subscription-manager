@@ -2,7 +2,16 @@ import { Module } from '@nestjs/common';
 import { CustomersController } from './adapters';
 import { CustomersRepository } from './infrastructure/repositories';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCustomerUseCase, ListCustomersUseCase, UpdateCustomerUseCase, FindCustomerUseCase } from './application';
+import {
+  CreateCustomerUseCase,
+  ListCustomersUseCase,
+  UpdateCustomerUseCase,
+  FindCustomerUseCase,
+  DeleteCustomerUseCase,
+  UpdateCustomerStatusUseCase,
+  FindCustomerByUserIdUseCase,
+  UpdateCustomerMeUseCase
+} from './application';
 
 @Module({
    controllers: [CustomersController],
@@ -12,7 +21,11 @@ import { CreateCustomerUseCase, ListCustomersUseCase, UpdateCustomerUseCase, Fin
       CreateCustomerUseCase,
       ListCustomersUseCase,
       UpdateCustomerUseCase,
-      FindCustomerUseCase
+      FindCustomerUseCase,
+      DeleteCustomerUseCase,
+      UpdateCustomerStatusUseCase,
+      FindCustomerByUserIdUseCase,
+      UpdateCustomerMeUseCase
    ],
    exports: [CustomersRepository],
 })

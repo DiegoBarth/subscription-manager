@@ -1,5 +1,6 @@
 import { UserRole } from 'src/users/domain/enums';
-import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from './dto';
+import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto, UpdateCustomerStatusDto } from './dto';
+import { SuccessResponseDto } from 'src/common/dto';
 
 export const CustomersSwagger = {
   create: {
@@ -43,4 +44,26 @@ export const CustomersSwagger = {
     },
     responseType: CustomerResponseDto,
   },
+  delete: {
+    summary: 'Delete customer (admin only)',
+    bearerAuth: true,
+    responseType: SuccessResponseDto,
+  },
+  updateStatus: {
+    summary: 'Activate/deactivate customer status (admin only)',
+    bearerAuth: true,
+    bodyType: UpdateCustomerStatusDto,
+    responseType: SuccessResponseDto,
+  },
+  me: {
+    summary: 'Get authenticated customer profile',
+    bearerAuth: true,
+    responseType: CustomerResponseDto,
+  },
+  updateMe: {
+    summary: 'Update authenticated customer profile',
+    bearerAuth: true,
+    bodyType: UpdateCustomerDto,
+    responseType: CustomerResponseDto,
+  }
 };
