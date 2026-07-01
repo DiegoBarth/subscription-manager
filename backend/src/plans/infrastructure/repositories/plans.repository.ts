@@ -5,7 +5,6 @@ import { FindPlansParams } from 'src/plans/domain/interfaces/find-plans-params.i
 
 @Injectable()
 export class PlansRepository {
-
   constructor(private readonly prisma: PrismaService) { }
 
   create(data: CreatePlanDto) {
@@ -14,28 +13,31 @@ export class PlansRepository {
         name: data.name,
         description: data.description,
         price: data.price,
-        duration_months: data.durationMonths
-      }
+        duration_months: data.durationMonths,
+      },
     });
   }
 
   update(id: number, data: UpdatePlanDto) {
-    const prismaData = { ...data } as any;
+    const prismaData: any = { ...data };
 
-    if (prismaData.durationMonths) {
+    if (prismaData.durationMonths !== undefined) {
       prismaData.duration_months = prismaData.durationMonths;
       delete prismaData.durationMonths;
     }
 
     return this.prisma.plan.update({
       where: { id },
-      data: prismaData
+      data: prismaData,
     });
   }
 
   findById(id: number) {
-    return this.prisma.plan.findUnique({
-      where: { id }
+    return this.prisma.plan.findFirst({
+      where: {
+        id,
+        deleted_at: null,
+      },
     });
   }
 
@@ -43,8 +45,8 @@ export class PlansRepository {
     return this.prisma.plan.findFirst({
       where: {
         name,
-        deleted_at: null
-      }
+        deleted_at: null,
+      },
     });
   }
 
@@ -59,7 +61,7 @@ export class PlansRepository {
       search,
       sortBy = 'created_at',
       sortOrder = 'DESC',
-      filters = {}
+      filters = {},
     } = params || {};
 
     const where: any = {
@@ -69,23 +71,82 @@ export class PlansRepository {
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          description: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
       ];
     }
 
-    if (name) where.name = { contains: name, mode: 'insensitive' };
-    if (description) where.description = { contains: description, mode: 'insensitive' };
-    if (price) where.price = price;
-    if (durationMonths) where.duration_months = durationMonths;
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: 'insensitive',
+      };
+    }
+
+    if (description) {
+      where.description = {
+        contains: description,
+        mode: 'insensitive',
+      };
+    }
+
+    if (price !== undefined) {
+      where.price = price;
+    }
+
+    if (durationMonths !== undefined) {
+      where.duration_months = durationMonths;
+    }
 
     return this.prisma.plan.findMany({
       skip,
       take,
       where,
       orderBy: {
-        [sortBy]: sortOrder.toLowerCase()
-      }
+        [sortBy]: sortOrder.toLowerCase(),
+      },
     });
   }
+
+  updateStatus(id: number, active: boolean) {
+    return this.prisma.plan.update({
+      where: { id },
+      data: {
+        active
+      },
+    });
+  }
+
+  softDelete(id: number) {
+    return this.prisma.plan.update({
+      where: { id },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
+  }
+
+  async hasActiveSubscriptions(planId: number) {
+    const count =
+      await this.prisma.subscription.count({
+        where: {
+          plan_id: planId,
+          status: 'active',
+          deleted_at: null,
+        },
+      });
+
+    return count > 0;
+  }
+
 }

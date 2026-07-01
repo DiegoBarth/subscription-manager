@@ -1,4 +1,4 @@
-import { UserRole } from "src/users/domain/enums";
+import { UserRole } from "@prisma/client";
 import {
   CreateSubscriptionDto,
   UpdateSubscriptionDto,
@@ -13,14 +13,14 @@ export const SubscriptionsSwagger = {
     summary: 'Create a new subscription (Admin only)',
     bearerAuth: true,
     bodyType: CreateSubscriptionDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     responseType: SubscriptionResponseDto
   },
 
   findAll: {
     summary: 'List all subscriptions (Admin only)',
     bearerAuth: true,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     responseType: SubscriptionResponseDto,
     queryParams: [
       { name: 'page', required: false, example: 1 },
@@ -37,7 +37,7 @@ export const SubscriptionsSwagger = {
   findById: {
     summary: 'Get subscription by ID (Admin only)',
     bearerAuth: true,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,
@@ -50,7 +50,7 @@ export const SubscriptionsSwagger = {
     summary: 'Update subscription by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdateSubscriptionDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,
@@ -94,7 +94,7 @@ export const SubscriptionsSwagger = {
   renew: {
     summary: 'Renew subscription (Admin only)',
     bearerAuth: true,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,

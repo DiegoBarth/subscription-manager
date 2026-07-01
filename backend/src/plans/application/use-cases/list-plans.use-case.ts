@@ -1,33 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PlansRepository } from '../../infrastructure/repositories';
 import { ListPlansParams } from '../interfaces/list-plans-params.interface';
+import { UserRole } from '@prisma/client';
+import { UsersRepository } from 'src/users/infrastructure/repositories';
 
 @Injectable()
 export class ListPlansUseCase {
+  constructor(
+    private readonly plansRepo: PlansRepository,
+    private readonly usersRepo: UsersRepository
+  ) {}
 
-  constructor(private readonly plansRepo: PlansRepository) { }
-
-  async execute(params: ListPlansParams) {
+  async execute(
+    params: ListPlansParams,
+    userId: number,
+  ) {
     const {
       page,
       limit,
       search,
       sortBy = 'created_at',
       sortOrder = 'DESC',
-      filters = {},
     } = params;
 
-    const skip = (page - 1) * limit;
-    const take = limit;
+    const user = await this.usersRepo.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    const filters: Record<string, any> = {};
+
+    if (user.role === UserRole.client) {
+      filters.active = true;
+    }
 
     return this.plansRepo.findAll({
-      skip,
-      take,
+      skip: (page - 1) * limit,
+      take: limit,
       search,
       sortBy,
       sortOrder,
-      filters
+      filters,
     });
   }
-
 }

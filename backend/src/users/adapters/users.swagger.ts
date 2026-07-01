@@ -1,5 +1,5 @@
 import { SuccessResponseDto } from "src/common/dto";
-import { UserRole } from "../domain/enums";
+import { UserRole } from "@prisma/client";
 import { CreateUserDto, ResetPasswordDto, UpdateUserDto, UpdateUserStatusDto, UserResponseDto } from "./dto";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { UpdateMeUserDto } from "./dto/update-me-user.dto";
@@ -9,7 +9,7 @@ export const UsersSwagger = {
     summary: 'Create a new user (Admin only)',
     bearerAuth: true,
     bodyType: CreateUserDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     responseType: UserResponseDto
   },
   findAll: {
@@ -45,7 +45,7 @@ export const UsersSwagger = {
     summary: 'Update user by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdateUserDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,

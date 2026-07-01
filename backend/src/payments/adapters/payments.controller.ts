@@ -14,8 +14,8 @@ import { SerializeInterceptor } from 'src/common/middlewares/response.intercepto
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Auth, AuthUser } from 'src/common/decorators';
-import { UserRole } from 'src/users/domain/enums';
+import { Auth } from 'src/common/decorators';
+import { UserRole } from '@prisma/client';
 
 import {
   CreatePaymentDto,
@@ -49,7 +49,7 @@ export class PaymentsController {
   ) { }
 
   @Post()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
   @ApplySwagger(PaymentsSwagger.create)
   async create(@Body() dto: CreatePaymentDto) {
@@ -90,7 +90,7 @@ export class PaymentsController {
   }
 
   @Patch(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
   @ApplySwagger(PaymentsSwagger.update)
   async update(
@@ -101,7 +101,7 @@ export class PaymentsController {
   }
 
   @Patch(':id/pay')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
   @ApplySwagger(PaymentsSwagger.markAsPaid)
   async markAsPaid(@Param('id', ParseIntPipe) id: number, @Body() dto: MarkPaymentAsPaidDto) {
@@ -109,7 +109,7 @@ export class PaymentsController {
   }
 
   @Patch(':id/refund')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(PaymentsSwagger.refund)
   async refund(
     @Param('id', ParseIntPipe) id: number

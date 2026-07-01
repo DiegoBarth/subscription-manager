@@ -5,9 +5,10 @@ import {
 } from '@nestjs/common';
 
 import { SuccessResponseDto } from 'src/common/dto';
-import { UserRole, UserStatus } from 'src/users/domain/enums';
+import { UserStatus } from 'src/users/domain/enums';
 import { UpdateUserStatusDto } from 'src/users/adapters/dto';
 import { UsersRepository } from 'src/users/infrastructure/repositories';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class UpdateUserStatusUseCase {
@@ -54,7 +55,7 @@ export class UpdateUserStatusUseCase {
     }
 
     if (
-      user.role === UserRole.ADMIN &&
+      user.role === UserRole.admin &&
       (dto.status === UserStatus.INACTIVE ||
         dto.status === UserStatus.BLOCKED)
     ) {

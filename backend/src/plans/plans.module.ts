@@ -2,7 +2,14 @@ import { Module } from '@nestjs/common';
 import { PlansController } from './adapters';
 import { PlansRepository } from './infrastructure/repositories';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePlanUseCase, ListPlansUseCase, UpdatePlanUseCase, FindPlanUseCase } from './application';
+import {
+  CreatePlanUseCase,
+  ListPlansUseCase,
+  UpdatePlanUseCase,
+  FindPlanUseCase,
+  UpdatePlanStatusUseCase,
+  DeletePlanUseCase
+} from './application';
 
 @Module({
   controllers: [PlansController],
@@ -12,7 +19,9 @@ import { CreatePlanUseCase, ListPlansUseCase, UpdatePlanUseCase, FindPlanUseCase
     CreatePlanUseCase,
     ListPlansUseCase,
     UpdatePlanUseCase,
-    FindPlanUseCase
+    FindPlanUseCase,
+    UpdatePlanStatusUseCase,
+    DeletePlanUseCase
   ],
   exports: [PlansRepository],
 })

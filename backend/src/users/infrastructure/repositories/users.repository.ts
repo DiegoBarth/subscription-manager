@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from 'src/users/adapters/dto';
-import { UserRole, UserStatus } from 'src/users/domain/enums';
+import { UserStatus } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 import { FindUsersParams } from 'src/users/domain/interfaces/find-users-params.interface';
 
 @Injectable()
@@ -104,7 +105,7 @@ export class UsersRepository {
   async countActiveAdmins() {
     return this.prisma.user.count({
       where: {
-        role: UserRole.ADMIN,
+        role: UserRole.admin,
         status: UserStatus.ACTIVE,
         deleted_at: null,
       },

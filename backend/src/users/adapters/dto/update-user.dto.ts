@@ -1,7 +1,7 @@
 import { IsEmail, IsOptional, IsString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsStrongPassword } from 'src/common/validators';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
@@ -26,7 +26,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @IsIn(Object.values(UserRole))
-  @ApiPropertyOptional({ example: UserRole.ADMIN })
+  @ApiPropertyOptional({ example: UserRole.admin })
   role?: string;
 
 }

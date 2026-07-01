@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { UserRole } from '../enums';
+import { UserRole } from '@prisma/client';
 
 export class UserEntity {
 
@@ -19,7 +19,7 @@ export class UserEntity {
   }
 
   isAdmin(): boolean {
-    return this.role === UserRole.ADMIN;
+    return this.role === UserRole.admin;
   }
 
   get displayName(): string {

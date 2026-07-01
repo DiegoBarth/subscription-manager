@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class FindSubscriptionUseCase {
@@ -14,7 +14,7 @@ export class FindSubscriptionUseCase {
       throw new NotFoundException(`Subscription with id ${id} not found`);
     }
 
-    if(user.role !== UserRole.ADMIN && subscription.customer_id !== user.id) {
+    if(user.role !== UserRole.admin && subscription.customer_id !== user.id) {
       throw new ForbiddenException();
     }
 

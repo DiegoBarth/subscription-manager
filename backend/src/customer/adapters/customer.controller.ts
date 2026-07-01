@@ -6,7 +6,7 @@ import { SerializeInterceptor } from 'src/common/middlewares/response.intercepto
 import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { CustomersSwagger } from './customer.swagger';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 
 @Controller('customers')
 @ApiTags('Customers')
@@ -25,7 +25,7 @@ export class CustomersController {
 
 
   @Post()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.create)
   async create(@Body() dto: CreateCustomerDto, @AuthUser('id') userId: number) {
@@ -33,7 +33,7 @@ export class CustomersController {
   }
 
   @Get()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.findAll)
   async findAll(@Query() query: ListCustomersDto) {
@@ -52,7 +52,7 @@ export class CustomersController {
   // =========================
 
   @Get('me')
-  @Auth(UserRole.CLIENT)
+  @Auth(UserRole.client)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.me)
   async me(@AuthUser('id') userId: number) {
@@ -60,7 +60,7 @@ export class CustomersController {
   }
 
   @Patch('me')
-  @Auth(UserRole.CLIENT)
+  @Auth(UserRole.client)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.updateMe)
   async updateMe(
@@ -71,7 +71,7 @@ export class CustomersController {
   }
 
   @Get(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.findById)
   async findById(@Param('id', ParseIntPipe) id: number) {
@@ -79,7 +79,7 @@ export class CustomersController {
   }
 
   @Patch(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
   @ApplySwagger(CustomersSwagger.update)
   async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCustomerDto) {
@@ -87,7 +87,7 @@ export class CustomersController {
   }
 
   @Delete(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(CustomersSwagger.delete)
   async delete(
     @Param('id', ParseIntPipe) id: number,
@@ -97,7 +97,7 @@ export class CustomersController {
   }
 
   @Patch(':id/status')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(CustomersSwagger.updateStatus)
   async updateStatus(
     @Param('id', ParseIntPipe) id: number,

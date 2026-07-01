@@ -40,7 +40,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { UsersSwagger } from './users.swagger';
 import { Auth, AuthUser } from 'src/common/decorators';
-import { UserRole } from '../domain/enums';
+import { UserRole } from '@prisma/client';
 
 @Controller('users')
 @ApiTags('Users')
@@ -62,7 +62,7 @@ export class UsersController {
   // ADMIN - CREATE USER
   // ==================================================
   @Post()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.create)
   async create(@Body() dto: CreateUserDto) {
@@ -73,7 +73,7 @@ export class UsersController {
   // ADMIN - LIST USERS
   // ==================================================
   @Get()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.findAll)
   async findAll(@Query() query: ListUsersDto) {
@@ -129,7 +129,7 @@ export class UsersController {
   // ADMIN - USER MANAGEMENT
   // ==================================================
   @Get(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.findById)
   async findById(@Param('id', ParseIntPipe) id: number) {
@@ -137,7 +137,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
   @ApplySwagger(UsersSwagger.update)
   async update(
@@ -151,7 +151,7 @@ export class UsersController {
   }
 
   @Patch(':id/password')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(UsersSwagger.resetPassword)
   async resetPassword(
     @Param('id', ParseIntPipe) id: number,
@@ -164,7 +164,7 @@ export class UsersController {
   }
 
   @Patch(':id/status')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(UsersSwagger.updateStatus)
   async updateStatus(
     @Param('id', ParseIntPipe) id: number,
@@ -179,7 +179,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @ApplySwagger(UsersSwagger.delete)
   async delete(
     @Param('id', ParseIntPipe) id: number,

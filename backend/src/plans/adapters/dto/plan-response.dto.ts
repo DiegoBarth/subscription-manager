@@ -25,6 +25,10 @@ export class PlanResponseDto {
   duration_months!: number;
 
   @Expose()
+  @ApiProperty({ example: true })
+  active!: boolean;
+
+  @Expose()
   @Transform(({ value }) => value?.toISOString())
   @ApiProperty({ example: '2025-07-29T19:37:05.464Z' })
   created_at!: Date;

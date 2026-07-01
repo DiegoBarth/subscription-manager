@@ -7,7 +7,7 @@ import {
 import { SuccessResponseDto } from 'src/common/dto';
 import { UsersRepository } from '../../infrastructure/repositories';
 import { AuthSessionService } from 'src/auth/application/services/auth-session.service';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class DeleteUserUseCase {
@@ -36,7 +36,7 @@ export class DeleteUserUseCase {
 
     const activeAdmins = await this.usersRepo.countActiveAdmins();
 
-    const isAdmin = user.role === UserRole.ADMIN;
+    const isAdmin = user.role === UserRole.admin;
 
     if (isAdmin && activeAdmins <= 1) {
       throw new BadRequestException(

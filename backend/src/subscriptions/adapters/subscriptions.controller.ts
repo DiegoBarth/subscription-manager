@@ -36,7 +36,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { SubscriptionsSwagger } from './subscriptions.swagger';
 import { Auth, AuthUser } from 'src/common/decorators';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 
 @Controller('subscriptions')
 @ApiTags('Subscriptions')
@@ -60,7 +60,7 @@ export class SubscriptionsController {
   */
 
   @Post()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
   @ApplySwagger(SubscriptionsSwagger.create)
   async create(@Body() dto: CreateSubscriptionDto) {
@@ -68,7 +68,7 @@ export class SubscriptionsController {
   }
 
   @Get()
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
   @ApplySwagger(SubscriptionsSwagger.findAll)
   async findAll(@Query() query: ListSubscriptionsDto) {
@@ -98,7 +98,7 @@ export class SubscriptionsController {
   }
 
   @Patch(':id')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
   @ApplySwagger(SubscriptionsSwagger.update)
   async update(
@@ -109,7 +109,7 @@ export class SubscriptionsController {
   }
 
   @Patch(':id/renew')
-  @Auth(UserRole.ADMIN)
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
   @ApplySwagger(SubscriptionsSwagger.renew)
   async renew(

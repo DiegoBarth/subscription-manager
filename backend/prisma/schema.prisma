@@ -88,7 +88,7 @@ model plan {
   description     String?      
   price           Int
   duration_months Int          @map("duration_months")
-  is_active       Boolean      @default(true)
+  active          Boolean      @default(true)
   created_at      DateTime     @default(now()) @map("created_at")
   updated_at      DateTime     @updatedAt @map("updated_at")
   deleted_at      DateTime?    @map("deleted_at")
@@ -96,7 +96,7 @@ model plan {
   subscriptions  subscription[]
 
   @@map("plans")
-  @@index([is_active])
+  @@index([active])
 }
 
 model subscription {

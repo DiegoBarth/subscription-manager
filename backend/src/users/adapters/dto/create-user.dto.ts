@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsStrongPassword } from 'src/common/validators';
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -23,6 +23,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @IsIn(Object.values(UserRole))
-  @ApiProperty({ example: UserRole.ADMIN, enum: UserRole })
+  @ApiProperty({ example: UserRole.admin, enum: UserRole })
   role!: UserRole;
 }

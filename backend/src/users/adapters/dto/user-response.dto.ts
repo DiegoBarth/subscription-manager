@@ -1,7 +1,8 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { isBoolean, IsIn } from 'class-validator';
-import { UserRole, UserStatus } from 'src/users/domain/enums';
+import { IsIn } from 'class-validator';
+import { UserRole } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserStatus } from 'src/users/domain/enums';
 
 export class UserResponseDto {
 
@@ -19,7 +20,7 @@ export class UserResponseDto {
 
   @Expose()
   @IsIn(Object.values(UserRole), { message: 'Invalid role.' })
-  @ApiProperty({ example: UserRole.ADMIN })
+  @ApiProperty({ example: UserRole.admin })
   role!: string;
 
   @Expose()

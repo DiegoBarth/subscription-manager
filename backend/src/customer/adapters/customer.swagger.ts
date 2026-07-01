@@ -1,4 +1,4 @@
-import { UserRole } from 'src/users/domain/enums';
+import { UserRole } from '@prisma/client';
 import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto, UpdateCustomerStatusDto } from './dto';
 import { SuccessResponseDto } from 'src/common/dto';
 
@@ -7,7 +7,7 @@ export const CustomersSwagger = {
     summary: 'Create a new customer (Admin only)',
     bearerAuth: true,
     bodyType: CreateCustomerDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     responseType: CustomerResponseDto,
   },
   findAll: {
@@ -36,7 +36,7 @@ export const CustomersSwagger = {
     summary: 'Update customer by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdateCustomerDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,

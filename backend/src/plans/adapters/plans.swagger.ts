@@ -1,16 +1,17 @@
-import { UserRole } from "src/users/domain/enums";
-import { CreatePlanDto, UpdatePlanDto, PlanResponseDto } from "./dto";
+import { UserRole } from "@prisma/client";
+import { CreatePlanDto, UpdatePlanDto, PlanResponseDto, UpdatePlanStatusDto } from "./dto";
+import { SuccessResponseDto } from "src/common/dto";
 
 export const PlansSwagger = {
   create: {
     summary: 'Create a new plan (Admin only)',
     bearerAuth: true,
     bodyType: CreatePlanDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     responseType: PlanResponseDto
   },
   findAll: {
-    summary: 'List all plans (Paginated)',
+    summary: 'List all plans - Paginated',
     bearerAuth: true,
     responseType: PlanResponseDto,
     queryParams: [
@@ -22,7 +23,7 @@ export const PlansSwagger = {
     ],
   },
   findById: {
-    summary: 'Get plan by ID',
+    summary: 'Get plan by ID (Admin only)',
     bearerAuth: true,
     param: {
       name: 'id',
@@ -35,12 +36,29 @@ export const PlansSwagger = {
     summary: 'Update plan by ID (Admin only)',
     bearerAuth: true,
     bodyType: UpdatePlanDto,
-    roles: [UserRole.ADMIN],
+    roles: [UserRole.admin],
     param: {
       name: 'id',
       type: Number,
       example: 1
     },
     responseType: PlanResponseDto
+  },
+  updateStatus: {
+    summary: 'Update plan by ID (Admin only)',
+    bearerAuth: true,
+    bodyType: UpdatePlanStatusDto,
+    roles: [UserRole.admin],
+    param: {
+      name: 'id',
+      type: Number,
+      example: 1
+    },
+    responseType: SuccessResponseDto
+  },
+  delete: {
+    summary: 'Delete plan (admin only)',
+    bearerAuth: true,
+    responseType: SuccessResponseDto,
   }
 };
