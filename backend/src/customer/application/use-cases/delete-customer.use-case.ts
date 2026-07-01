@@ -11,10 +11,9 @@ import { CustomersRepository } from '../../infrastructure/repositories';
 export class DeleteCustomerUseCase {
   constructor(
     private readonly customersRepo: CustomersRepository,
-  ) {}
+  ) { }
 
-  async execute(id: number): Promise<SuccessResponseDto> {
-
+  async execute(id: number, currentUserId: number): Promise<SuccessResponseDto> {
     const customer = await this.customersRepo.findById(id);
 
     if (!customer) {
@@ -23,6 +22,10 @@ export class DeleteCustomerUseCase {
 
     if (customer.deleted_at) {
       throw new BadRequestException('Customer is already deleted');
+    }
+
+    if (customer.user_id === currentUserId) {
+      throw new BadRequestException('You cannot delete your own customer record');
     }
 
     const hasActiveSubscription =
@@ -45,8 +48,6 @@ export class DeleteCustomerUseCase {
 
     await this.customersRepo.softDelete(id);
 
-    return {
-      message: 'Customer deleted successfully',
-    };
+    return { message: 'Customer deleted successfully' };
   }
 }

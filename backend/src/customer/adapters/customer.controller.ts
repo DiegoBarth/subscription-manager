@@ -91,8 +91,9 @@ export class CustomersController {
   @ApplySwagger(CustomersSwagger.delete)
   async delete(
     @Param('id', ParseIntPipe) id: number,
+    @AuthUser('id') currentUserId: number,
   ) {
-    return this.deleteCustomer.execute(id);
+    return this.deleteCustomer.execute(id, currentUserId);
   }
 
   @Patch(':id/status')

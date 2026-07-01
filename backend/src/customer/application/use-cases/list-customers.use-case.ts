@@ -26,7 +26,10 @@ export class ListCustomersUseCase {
       search,
       sortBy,
       sortOrder,
-      filters,
+      filters: {
+        ...filters,
+        ...(filters.status && { status: filters.status }),
+      },
     });
   }
 }

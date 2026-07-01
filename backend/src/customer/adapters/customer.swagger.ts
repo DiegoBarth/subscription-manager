@@ -11,7 +11,7 @@ export const CustomersSwagger = {
     responseType: CustomerResponseDto,
   },
   findAll: {
-    summary: 'List all customers (Paginated)',
+    summary: 'List all customers - Paginated (Admin only)',
     bearerAuth: true,
     responseType: CustomerResponseDto,
     queryParams: [
@@ -23,7 +23,7 @@ export const CustomersSwagger = {
     ],
   },
   findById: {
-    summary: 'Get customer by ID',
+    summary: 'Get customer by ID (Admin only)',
     bearerAuth: true,
     param: {
       name: 'id',

@@ -9,7 +9,11 @@ export class FindCustomerUseCase {
   async execute(id: number) {
     const customer = await this.customersRepo.findById(id);
 
-    if(!customer) {
+    if (!customer) {
+      throw new NotFoundException(`Customer with id ${id} not found`);
+    }
+
+    if (customer.deleted_at) {
       throw new NotFoundException(`Customer with id ${id} not found`);
     }
 

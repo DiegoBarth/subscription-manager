@@ -26,7 +26,6 @@ export class UpdateCustomerStatusUseCase {
       throw new NotFoundException('Customer not found');
     }
 
-    // não permitir "pending" manual
     if (dto.status === CustomerStatus.pending) {
       throw new BadRequestException(
         'Customer status cannot be set to pending manually',

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { UpdateCustomerDto } from "src/customer/adapters/dto";
 import { CustomersRepository } from "src/customer/infrastructure/repositories";
 
@@ -15,12 +15,22 @@ export class UpdateCustomerMeUseCase {
       throw new NotFoundException('Customer not found');
     }
 
-    const updated = await this.customersRepo.update(customer.id, {
+    if (customer.deleted_at) {
+      throw new BadRequestException('Cannot update deleted customer');
+    }
+
+    if (dto.email && dto.email !== customer.email) {
+      const emailExists = await this.customersRepo.findByEmail(dto.email);
+
+      if (emailExists && emailExists.id !== customer.id) {
+        throw new BadRequestException('Email already in use');
+      }
+    }
+
+    return this.customersRepo.update(customer.id, {
       name: dto.name,
       email: dto.email,
       phone: dto.phone ?? undefined,
     });
-
-    return updated;
   }
 }

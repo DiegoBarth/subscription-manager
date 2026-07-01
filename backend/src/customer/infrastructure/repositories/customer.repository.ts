@@ -80,6 +80,15 @@ export class CustomersRepository {
     });
   }
 
+  async findByUserIdAndEmail(userId: number, email: string) {
+    return this.prisma.customer.findFirst({
+      where: {
+        user_id: userId,
+        email: email,
+      },
+    });
+  }
+
   async hasActiveSubscription(customerId: number) {
     const count = await this.prisma.subscription.count({
       where: {

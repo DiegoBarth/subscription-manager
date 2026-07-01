@@ -8,12 +8,9 @@ export class CreateCustomerUseCase {
   constructor(private readonly customersRepo: CustomersRepository) { }
 
   async execute(userId: number, data: CreateCustomerDto) {
-    const existingCustomers = await this.customersRepo.findAll({
-      email: data.email,
-      userId
-    });
+    const existing = await this.customersRepo.findByUserIdAndEmail(userId, data.email);
 
-    if (existingCustomers.length > 0) {
+    if (existing) {
       throw new ConflictException('Customer email already registered for this user');
     }
 
