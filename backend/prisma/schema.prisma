@@ -79,6 +79,7 @@ model customer {
 
   @@map("customers")
   @@index([user_id])
+  @@unique([user_id, email])
 }
 
 model plan {
@@ -118,7 +119,6 @@ model subscription {
   @@index([customer_id])
   @@index([plan_id])
   @@index([status])
-  @@unique([user_id, email])
 }
 
 model payment {
