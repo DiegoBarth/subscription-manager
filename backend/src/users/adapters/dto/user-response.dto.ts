@@ -1,5 +1,5 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { IsIn } from 'class-validator';
+import { isBoolean, IsIn } from 'class-validator';
 import { UserRole } from 'src/users/domain/enums';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -21,6 +21,10 @@ export class UserResponseDto {
   @IsIn(Object.values(UserRole), { message: 'Invalid role.' })
   @ApiProperty({ example: UserRole.ADMIN })
   role!: string;
+
+  @Expose()
+  @ApiProperty({ example: true })
+  status!: boolean;
 
   @Expose()
   @Transform(({ value }) => value?.toISOString())

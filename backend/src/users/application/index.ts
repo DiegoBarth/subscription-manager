@@ -3,3 +3,8 @@ export * from './use-cases/update-user.use-case';
 export * from './use-cases/list-users.use-case';
 export * from './use-cases/find-user.use-case';
 export * from './use-cases/find-me-user.use-case';
+export * from './use-cases/update-me.use-case';
+export * from './use-cases/change-password.use-case';
+export * from './use-cases/reset-user-password.use-case';
+export * from './use-cases/update-user-status.use-case';
+export * from './use-cases/delete-user.use-case';

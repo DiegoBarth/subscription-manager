@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from 'src/users/adapters/dto';
+import { UserRole, UserStatus } from 'src/users/domain/enums';
 import { FindUsersParams } from 'src/users/domain/interfaces/find-users-params.interface';
 
 @Injectable()
@@ -22,7 +23,7 @@ export class UsersRepository {
   update(id: number, data: UpdateUserDto) {
     const prismaData = { ...data } as any;
 
-    if(prismaData.password) {
+    if (prismaData.password) {
       prismaData.password_hash = prismaData.password;
 
       delete prismaData.password;
@@ -58,14 +59,14 @@ export class UsersRepository {
 
     if (search) {
       where.OR = [
-        { name:  { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } }
       ];
     }
 
-    if(name) where.name   = { contains: name,  mode: 'insensitive' };
-    if(email) where.email = { contains: email, mode: 'insensitive' };
-    if(role) where.role   = role;
+    if (name) where.name = { contains: name, mode: 'insensitive' };
+    if (email) where.email = { contains: email, mode: 'insensitive' };
+    if (role) where.role = role;
 
     return this.prisma.user.findMany({
       skip,
@@ -74,6 +75,39 @@ export class UsersRepository {
       orderBy: {
         [sortBy]: sortOrder.toLowerCase()
       }
+    });
+  }
+
+  async updateStatus(
+    id: number,
+    status: UserStatus,
+  ) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        status,
+      },
+    });
+  }
+
+  async softDelete(id: number) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
+  }
+
+  async countActiveAdmins() {
+    return this.prisma.user.count({
+      where: {
+        role: UserRole.ADMIN,
+        status: UserStatus.ACTIVE,
+        deleted_at: null,
+      },
     });
   }
 

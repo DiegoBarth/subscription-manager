@@ -30,7 +30,7 @@ async function main() {
       name: 'John Doe',
       email: 'john@example.com',
       password_hash: await bcrypt.hash('User123!', 10),
-      role: UserRole.customer,
+      role: UserRole.client,
     },
   });
 
@@ -41,7 +41,7 @@ async function main() {
       name: 'Jane Smith',
       email: 'jane@example.com',
       password_hash: await bcrypt.hash('User123!', 10),
-      role: UserRole.customer,
+      role: UserRole.client,
     },
   });
 
@@ -52,7 +52,7 @@ async function main() {
       name: 'Bob Brown',
       email: 'bob@example.com',
       password_hash: await bcrypt.hash('User123!', 10),
-      role: UserRole.customer,
+      role: UserRole.client,
     },
   });
 

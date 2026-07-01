@@ -1,5 +1,8 @@
+import { SuccessResponseDto } from "src/common/dto";
 import { UserRole } from "../domain/enums";
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from "./dto";
+import { CreateUserDto, ResetPasswordDto, UpdateUserDto, UpdateUserStatusDto, UserResponseDto } from "./dto";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import { UpdateMeUserDto } from "./dto/update-me-user.dto";
 
 export const UsersSwagger = {
   create: {
@@ -49,5 +52,34 @@ export const UsersSwagger = {
       example: 1
     },
     responseType: UserResponseDto
+  },
+  updateMe: {
+    summary: 'Update authenticated user',
+    bearerAuth: true,
+    bodyType: UpdateMeUserDto,
+    responseType: UserResponseDto
+  },
+  changePassword: {
+    summary: 'Change user password',
+    bearerAuth: true,
+    bodyType: ChangePasswordDto,
+    responseType: SuccessResponseDto
+  },
+  resetPassword: {
+    summary: 'Reset user password',
+    bearerAuth: true,
+    bodyType: ResetPasswordDto,
+    responseType: SuccessResponseDto,
+  },
+  updateStatus: {
+    summary: 'Activate or deactivate a user',
+    bearerAuth: true,
+    bodyType: UpdateUserStatusDto,
+    responseType: SuccessResponseDto,
+  },
+  delete: {
+    summary: 'Delete user',
+    bearerAuth: true,
+    responseType: SuccessResponseDto,
   }
 };

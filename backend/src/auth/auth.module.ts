@@ -7,6 +7,8 @@ import { AuthController } from './adapters';
 import { AuthRepository, RefreshTokenRepository  } from './infrastructure/repositories';
 import { JwtStrategy } from './infrastructure/strategies';
 import { LoginUseCase, LogoutUseCase, ValidateUserUseCase, RefreshTokenUseCase } from './application';
+import { AuthSessionService } from './application/services/auth-session.service';
+import { AuthUserPolicy } from './policies/auth-user.policy';
 
 @Module({
    imports: [
@@ -30,9 +32,11 @@ import { LoginUseCase, LogoutUseCase, ValidateUserUseCase, RefreshTokenUseCase }
       RefreshTokenUseCase,
       LoginUseCase,
       LogoutUseCase,
-      JwtStrategy
+      JwtStrategy,
+      AuthSessionService,
+      AuthUserPolicy
    ],
-   exports: [LoginUseCase]
+   exports: [LoginUseCase, AuthSessionService, RefreshTokenRepository]
 })
 
 export class AuthModule { }

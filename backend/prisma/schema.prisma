@@ -9,7 +9,14 @@ generator client {
 
 enum UserRole {
   admin
-  customer
+  client
+}
+
+enum UserStatus {
+  active
+  inactive
+  blocked
+  pending
 }
 
 enum SubscriptionStatus {
@@ -34,14 +41,15 @@ enum PaymentMethod {
 }
 
 model user {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   name           String
-  email          String    @unique
-  password_hash  String    @map("password_hash")
+  email          String     @unique
+  password_hash  String     @map("password_hash")
   role           UserRole
-  created_at     DateTime  @default(now()) @map("created_at")
-  updated_at     DateTime  @updatedAt @map("updated_at")
-  deleted_at     DateTime? @map("deleted_at")
+  status         UserStatus @default(active)
+  created_at     DateTime   @default(now()) @map("created_at")
+  updated_at     DateTime   @updatedAt @map("updated_at")
+  deleted_at     DateTime?  @map("deleted_at")
   customer       customer?
   refresh_tokens refresh_token[]
 
