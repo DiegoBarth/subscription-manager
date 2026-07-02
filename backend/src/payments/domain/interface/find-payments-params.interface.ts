@@ -1,13 +1,14 @@
-import { PaymentStatus } from '../enums/payment-status.enum';
+import { PaymentStatus } from "@prisma/client";
 
 export interface FindPaymentsParams {
-  skip?: number;
-  take?: number;
-  subscriptionId?: number;
-  status?: PaymentStatus;
-  dueDate?: Date;
+  skip: number;
+  take: number;
   search?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
-  filters?: Record<string, any>;
+  filters?: {
+    customerId?: number;
+    subscriptionId?: number;
+    status?: PaymentStatus;
+  };
 }

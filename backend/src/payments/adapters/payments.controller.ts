@@ -14,11 +14,10 @@ import { SerializeInterceptor } from 'src/common/middlewares/response.intercepto
 import { ApplySwagger } from 'src/common/decorators/apply-swagger.decorator';
 import { ApiTags } from '@nestjs/swagger';
 
-import { Auth } from 'src/common/decorators';
+import { Auth, AuthUser } from 'src/common/decorators';
 import { UserRole } from '@prisma/client';
 
 import {
-  CreatePaymentDto,
   ListPaymentsDto,
   UpdatePaymentDto,
   PaymentResponseDto,
@@ -26,12 +25,12 @@ import {
 } from './dto';
 
 import {
-  CreatePaymentUseCase,
   ListPaymentsUseCase,
   FindPaymentUseCase,
   UpdatePaymentUseCase,
   MarkPaymentAsPaidUseCase,
-  RefundPaymentUseCase
+  RefundPaymentUseCase,
+  ListPaymentsMineUseCase
 } from '../application';
 
 import { PaymentsSwagger } from './payments.swagger';
@@ -40,53 +39,66 @@ import { PaymentsSwagger } from './payments.swagger';
 @ApiTags('Payments')
 export class PaymentsController {
   constructor(
-    private readonly createPaymentUseCase: CreatePaymentUseCase,
     private readonly listPaymentsUseCase: ListPaymentsUseCase,
     private readonly findPaymentUseCase: FindPaymentUseCase,
     private readonly updatePaymentUseCase: UpdatePaymentUseCase,
     private readonly markPaymentAsPaidUseCase: MarkPaymentAsPaidUseCase,
-    private readonly refundPaymentUseCase: RefundPaymentUseCase
+    private readonly refundPaymentUseCase: RefundPaymentUseCase,
+    private readonly listPaymentsMineUseCase: ListPaymentsMineUseCase
   ) { }
-
-  @Post()
-  @Auth(UserRole.admin)
-  @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
-  @ApplySwagger(PaymentsSwagger.create)
-  async create(@Body() dto: CreatePaymentDto) {
-    return this.createPaymentUseCase.execute(dto);
-  }
 
   @Get()
   @Auth()
   @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
   @ApplySwagger(PaymentsSwagger.list)
-  async list(@Query() query: ListPaymentsDto) {
-    const {
-      page = '1',
-      limit = '10',
-      subscriptionId,
-      status,
-      sortBy,
-      sortOrder,
-    } = query;
+  async list(
+    @AuthUser() user: any,
+    @Query() query: ListPaymentsDto,
+  ) {
+    return this.listPaymentsUseCase.execute(
+      {
+        page: Math.max(Number(query.page ?? 1), 1),
+        limit: Math.min(Math.max(Number(query.limit ?? 10), 1), 100),
+        subscriptionId: query.subscriptionId ? Number(query.subscriptionId) : undefined,
+        status: query.status,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+        filters: {},
+      },
+      user,
+    );
+  }
 
-    return this.listPaymentsUseCase.execute({
-      page: Math.max(Number(page), 1),
-      limit: Math.min(Math.max(Number(limit), 1), 100),
-      subscriptionId: subscriptionId ? Number(subscriptionId) : undefined,
-      status,
-      sortBy,
-      sortOrder,
-      filters: {},
-    });
+  @Get('me')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
+  @ApplySwagger(PaymentsSwagger.listMine)
+  async listMine(
+    @AuthUser() user: any,
+    @Query() query: ListPaymentsDto,
+  ) {
+    return this.listPaymentsUseCase.execute(
+      {
+        page: Math.max(Number(query.page ?? 1), 1),
+        limit: Math.min(Math.max(Number(query.limit ?? 10), 1), 100),
+        status: query.status,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+        filters: {},
+      },
+      user,
+    );
   }
 
   @Get(':id')
   @Auth()
   @UseInterceptors(new SerializeInterceptor(PaymentResponseDto))
   @ApplySwagger(PaymentsSwagger.findById)
-  async findById(@Param('id', ParseIntPipe) id: number) {
-    return this.findPaymentUseCase.execute(id);
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: any,
+  ) {
+    return this.findPaymentUseCase.execute(id, user);
   }
 
   @Patch(':id')

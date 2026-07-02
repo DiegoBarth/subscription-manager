@@ -52,6 +52,14 @@ export class PaymentsRepository {
   findById(id: number) {
     return this.prisma.payment.findUnique({
       where: { id },
+      include: {
+        subscription: {
+          select: {
+            id: true,
+            customer_id: true,
+          },
+        },
+      },
     });
   }
 
@@ -59,8 +67,6 @@ export class PaymentsRepository {
     const {
       skip,
       take,
-      subscriptionId,
-      status,
       search,
       sortBy = 'created_at',
       sortOrder = 'DESC',
@@ -69,20 +75,34 @@ export class PaymentsRepository {
 
     const where: any = {
       deleted_at: null,
-      ...filters,
     };
 
-    if (subscriptionId) {
-      where.subscription_id = subscriptionId;
+    // ✔ customer via subscription
+    if (filters.customerId) {
+      where.subscription = {
+        customer_id: filters.customerId,
+      };
     }
 
-    if (status) {
-      where.status = status;
+    // ✔ subscription direta
+    if (filters.subscriptionId) {
+      where.subscription_id = filters.subscriptionId;
     }
 
+    // ✔ status centralizado
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    // ✔ search só em campos válidos
     if (search) {
       where.OR = [
-        { status: { contains: search, mode: 'insensitive' } },
+        {
+          payment_method: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
       ];
     }
 
@@ -90,6 +110,14 @@ export class PaymentsRepository {
       skip,
       take,
       where,
+      include: {
+        subscription: {
+          select: {
+            id: true,
+            customer_id: true,
+          },
+        },
+      },
       orderBy: {
         [sortBy]: sortOrder.toLowerCase(),
       },
@@ -120,5 +148,4 @@ export class PaymentsRepository {
       },
     });
   }
-
 }

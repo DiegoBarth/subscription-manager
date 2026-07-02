@@ -89,6 +89,14 @@ export class CustomersRepository {
     });
   }
 
+  async findByUserId(userId: number) {
+    return this.prisma.customer.findFirst({
+      where: {
+        user_id: userId
+      },
+    });
+  }
+
   async hasActiveSubscription(customerId: number) {
     const count = await this.prisma.subscription.count({
       where: {

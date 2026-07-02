@@ -1,20 +1,10 @@
 import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
-import { PaymentMethod } from 'src/payments/domain/enums/payment-method.enum';
 import {
-  CreatePaymentDto,
   UpdatePaymentDto,
-  PaymentResponseDto,
-  ListPaymentsDto
+  PaymentResponseDto
 } from './dto';
 
 export const PaymentsSwagger = {
-  create: {
-    summary: 'Create a new payment',
-    bearerAuth: true,
-    bodyType: CreatePaymentDto,
-    responseType: PaymentResponseDto,
-  },
-
   list: {
     summary: 'List payments (filtered)',
     bearerAuth: true,
@@ -68,6 +58,12 @@ export const PaymentsSwagger = {
       example: 1
     },
     responseType: PaymentResponseDto
-  }
+  },
+
+  listMine: {
+    summary: 'List authenticated customer payments',
+    bearerAuth: true,
+    responseType: PaymentResponseDto,
+  },
 
 };

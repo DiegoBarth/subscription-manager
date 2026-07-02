@@ -1,18 +1,27 @@
 import { Module } from '@nestjs/common';
 import { PaymentsController } from './adapters';
-import { CreatePaymentUseCase, ListPaymentsUseCase, UpdatePaymentUseCase, FindPaymentUseCase, MarkPaymentAsPaidUseCase, RefundPaymentUseCase } from './application';
+import {
+  ListPaymentsUseCase,
+  UpdatePaymentUseCase,
+  FindPaymentUseCase,
+  MarkPaymentAsPaidUseCase,
+  RefundPaymentUseCase,
+  ListPaymentsMineUseCase
+} from './application';
 import { BillingModule } from 'src/billing/billing.module';
+import { PaymentAuthorizationService } from './application/services/payment-authorization.service';
 
 @Module({
   imports: [BillingModule],
   controllers: [PaymentsController],
   providers: [
-    CreatePaymentUseCase,
     ListPaymentsUseCase,
     UpdatePaymentUseCase,
     FindPaymentUseCase,
     MarkPaymentAsPaidUseCase,
     RefundPaymentUseCase,
+    ListPaymentsMineUseCase,
+    PaymentAuthorizationService
   ],
 })
 export class PaymentsModule {}

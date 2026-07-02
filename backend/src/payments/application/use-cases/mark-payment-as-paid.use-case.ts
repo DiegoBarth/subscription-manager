@@ -5,11 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { PaymentsRepository } from '../../infrastructure/repositories';
-
 import { PaymentStatus } from '../../domain/enums/payment-status.enum';
-
 import { MarkPaymentAsPaidDto } from '../../adapters/dto';
-
 import { BillingService } from 'src/billing/application/services/billing.service';
 
 @Injectable()
@@ -19,45 +16,37 @@ export class MarkPaymentAsPaidUseCase {
     private readonly billingService: BillingService,
   ) { }
 
-  async execute(
-    id: number,
-    dto: MarkPaymentAsPaidDto,
-  ) {
-    const payment =
-      await this.paymentsRepo.findById(id);
+  async execute(id: number, dto: MarkPaymentAsPaidDto) {
+    const payment = await this.paymentsRepo.findById(id);
 
     if (!payment) {
-      throw new NotFoundException(
-        `Payment with id ${id} not found`,
+      throw new NotFoundException(`Payment with id ${id} not found`);
+    }
+
+    if (payment.status === PaymentStatus.PAID) {
+      return payment;
+    }
+
+    if (
+      payment.status === PaymentStatus.REFUNDED ||
+      payment.status === PaymentStatus.FAILED
+    ) {
+      throw new BadRequestException(
+        `Payment in status ${payment.status} cannot be processed`,
       );
     }
 
-    switch (payment.status) {
-      case PaymentStatus.PAID:
-        throw new BadRequestException(
-          'Payment already paid',
-        );
+    await this.paymentsRepo.update(id, {
+      status: PaymentStatus.PAID,
+      paidAt: new Date(),
+      paymentMethod: dto.paymentMethod,
+    });
 
-      case PaymentStatus.REFUNDED:
-        throw new BadRequestException(
-          'Refunded payment cannot be marked as paid',
-        );
+    await this.billingService.onPaymentPaid({
+      ...payment,
+      status: PaymentStatus.PAID,
+    });
 
-      case PaymentStatus.FAILED:
-        throw new BadRequestException(
-          'Failed payment cannot be marked as paid',
-        );
-    }
-
-    const updated =
-      await this.paymentsRepo.update(id, {
-        status: PaymentStatus.PAID,
-        paidAt: new Date(),
-        paymentMethod: dto.paymentMethod,
-      });
-
-    await this.billingService.onPaymentPaid(updated);
-
-    return updated;
+    return this.paymentsRepo.findById(id);
   }
 }
