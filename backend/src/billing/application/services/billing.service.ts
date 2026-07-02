@@ -8,7 +8,7 @@ import { PaymentsRepository } from 'src/payments/infrastructure/repositories';
 import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
 
 import { SubscriptionsRepository } from 'src/subscriptions/infrastructure/repositories';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
+import { SubscriptionStatus } from '@prisma/client';
 
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
 
@@ -74,7 +74,7 @@ export class BillingService {
 
     await this.subscriptionsRepo.update(subscription.id, {
       endDate: newEndDate,
-      status: SubscriptionStatus.ACTIVE,
+      status: SubscriptionStatus.active,
     });
 
     await this.createSubscriptionPayment(
@@ -84,10 +84,7 @@ export class BillingService {
     );
   }
 
-  async renewSubscription(subscriptionId: number) {
-    const subscription =
-      await this.subscriptionsRepo.findById(subscriptionId);
-
+  async renewSubscription(subscription: any) {
     if (!subscription) {
       throw new NotFoundException('Subscription not found');
     }
@@ -110,7 +107,7 @@ export class BillingService {
     await this.subscriptionsRepo.update(subscription.id, {
       endDate: newEndDate,
       contractedPrice: subscription.contracted_price,
-      status: SubscriptionStatus.ACTIVE,
+      status: SubscriptionStatus.active,
     });
 
     await this.createSubscriptionPayment(

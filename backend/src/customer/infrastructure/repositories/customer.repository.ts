@@ -132,10 +132,21 @@ export class CustomersRepository {
     });
   }
 
-  async findByUserId(userId: number) {
+  async findActiveByUserId(userId: number) {
     return this.prisma.customer.findFirst({
       where: {
         user_id: userId,
+        status: CustomerStatus.active,
+        deleted_at: null,
+      },
+    });
+  }
+
+  async findActiveById(id: number) {
+    return this.prisma.customer.findFirst({
+      where: {
+        id,
+        status: CustomerStatus.active,
         deleted_at: null,
       },
     });

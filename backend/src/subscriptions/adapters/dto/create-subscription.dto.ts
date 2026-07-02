@@ -6,7 +6,7 @@ import {
   IsEnum,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
+import { SubscriptionStatus } from '@prisma/client';
 
 export class CreateSubscriptionDto {
   @IsNotEmpty()
@@ -32,7 +32,7 @@ export class CreateSubscriptionDto {
   @IsOptional()
   @IsEnum(SubscriptionStatus)
   @ApiProperty({
-    example: SubscriptionStatus.ACTIVE,
+    example: SubscriptionStatus.active,
     required: false,
     enum: SubscriptionStatus,
   })

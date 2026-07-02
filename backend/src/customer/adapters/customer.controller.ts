@@ -23,15 +23,6 @@ export class CustomersController {
     private readonly updateCustomerMe: UpdateCustomerMeUseCase
   ) { }
 
-
-  @Post()
-  @Auth(UserRole.admin)
-  @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
-  @ApplySwagger(CustomersSwagger.create)
-  async create(@Body() dto: CreateCustomerDto, @AuthUser('id') userId: number) {
-    return this.createCustomer.execute(userId, dto);
-  }
-
   @Get()
   @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
@@ -47,9 +38,13 @@ export class CustomersController {
     });
   }
 
-  // =========================
-  // CLIENT
-  // =========================
+  @Post()
+  @Auth(UserRole.admin)
+  @UseInterceptors(new SerializeInterceptor(CustomerResponseDto))
+  @ApplySwagger(CustomersSwagger.create)
+  async create(@Body() dto: CreateCustomerDto, @AuthUser('id') userId: number) {
+    return this.createCustomer.execute(userId, dto);
+  }
 
   @Get('me')
   @Auth(UserRole.client)

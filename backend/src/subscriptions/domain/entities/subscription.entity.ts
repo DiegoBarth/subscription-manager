@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { SubscriptionStatus } from '../enums';
+import { SubscriptionStatus } from '@prisma/client';
 
 export class SubscriptionEntity {
 
@@ -23,18 +23,18 @@ export class SubscriptionEntity {
   }
 
   isActive(): boolean {
-    return this.status === SubscriptionStatus.ACTIVE;
+    return this.status === SubscriptionStatus.active;
   }
 
   isExpired(): boolean {
     return (
-      this.status === SubscriptionStatus.EXPIRED ||
+      this.status === SubscriptionStatus.expired ||
       new Date() > this.endDate
     );
   }
 
   get isValid(): boolean {
-    return this.status === SubscriptionStatus.ACTIVE && !this.isExpired();
+    return this.status === SubscriptionStatus.active && !this.isExpired();
   }
 
 }

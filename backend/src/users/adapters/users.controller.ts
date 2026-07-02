@@ -58,20 +58,6 @@ export class UsersController {
     private readonly deleteUser: DeleteUserUseCase,
   ) { }
 
-  // ==================================================
-  // ADMIN - CREATE USER
-  // ==================================================
-  @Post()
-  @Auth(UserRole.admin)
-  @UseInterceptors(new SerializeInterceptor(UserResponseDto))
-  @ApplySwagger(UsersSwagger.create)
-  async create(@Body() dto: CreateUserDto) {
-    return this.createUser.execute(dto);
-  }
-
-  // ==================================================
-  // ADMIN - LIST USERS
-  // ==================================================
   @Get()
   @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
@@ -87,9 +73,14 @@ export class UsersController {
     });
   }
 
-  // ==================================================
-  // SELF SERVICE - PROFILE
-  // ==================================================
+  @Post()
+  @Auth(UserRole.admin)
+  @UseInterceptors(new SerializeInterceptor(UserResponseDto))
+  @ApplySwagger(UsersSwagger.create)
+  async create(@Body() dto: CreateUserDto) {
+    return this.createUser.execute(dto);
+  }
+
   @Get('me')
   @Auth()
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))
@@ -125,9 +116,6 @@ export class UsersController {
     );
   }
 
-  // ==================================================
-  // ADMIN - USER MANAGEMENT
-  // ==================================================
   @Get(':id')
   @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(UserResponseDto))

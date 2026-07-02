@@ -1,6 +1,6 @@
 import { IsOptional, IsNumberString, IsIn, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
+import { SubscriptionStatus } from '@prisma/client';
 
 export class ListUserSubscriptionsDto {
 

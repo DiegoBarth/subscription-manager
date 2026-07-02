@@ -9,12 +9,15 @@ import {
   ListUserSubscriptionsUseCase,
   SubscribeSubscriptionUseCase,
   FindSubscriptionUseCase,
-  RenewSubscriptionUseCase
+  RenewSubscriptionUseCase,
+  ListSubscriptionPaymentsUseCase,
+  UpdateSubscriptionStatusUseCase
 } from './application';
 
 import { CustomerModule } from 'src/customer/customer.module';
 import { PlansModule } from 'src/plans/plans.module';
 import { BillingModule } from 'src/billing/billing.module';
+import { SubscriptionService } from './application/services/subscription.service';
 
 @Module({
   imports: [
@@ -32,6 +35,9 @@ import { BillingModule } from 'src/billing/billing.module';
     FindSubscriptionUseCase,
     ListUserSubscriptionsUseCase,
     SubscribeSubscriptionUseCase,
+    SubscriptionService,
+    ListSubscriptionPaymentsUseCase,
+    UpdateSubscriptionStatusUseCase
   ],
 })
 export class SubscriptionsModule {}

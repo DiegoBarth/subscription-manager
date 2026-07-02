@@ -17,7 +17,8 @@ import {
   ListSubscriptionsDto,
   SubscribeSubscriptionDto,
   CancelSubscriptionDto,
-  ListUserSubscriptionsDto
+  ListUserSubscriptionsDto,
+  UpdateSubscriptionStatusDto
 } from './dto';
 
 import {
@@ -28,7 +29,9 @@ import {
   CancelSubscriptionUseCase,
   ListUserSubscriptionsUseCase,
   FindSubscriptionUseCase,
-  RenewSubscriptionUseCase 
+  RenewSubscriptionUseCase,
+  ListSubscriptionPaymentsUseCase,
+  UpdateSubscriptionStatusUseCase
 } from '../application';
 
 import { SerializeInterceptor } from 'src/common/middlewares/response.interceptor';
@@ -50,22 +53,10 @@ export class SubscriptionsController {
     private readonly subscribeSubscription: SubscribeSubscriptionUseCase,
     private readonly cancelSubscription: CancelSubscriptionUseCase,
     private readonly listUserSubscriptions: ListUserSubscriptionsUseCase,
-    private readonly renewSubscription: RenewSubscriptionUseCase
+    private readonly renewSubscription: RenewSubscriptionUseCase,
+    private readonly listSubscriptionPayments: ListSubscriptionPaymentsUseCase,
+    private readonly updateSubscriptionStatus: UpdateSubscriptionStatusUseCase
   ) { }
-
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN ROUTES
-  |--------------------------------------------------------------------------
-  */
-
-  @Post()
-  @Auth(UserRole.admin)
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.create)
-  async create(@Body() dto: CreateSubscriptionDto) {
-    return this.createSubscription.execute(dto);
-  }
 
   @Get()
   @Auth(UserRole.admin)
@@ -97,32 +88,13 @@ export class SubscriptionsController {
     });
   }
 
-  @Patch(':id')
+  @Post()
   @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.update)
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateSubscriptionDto
-  ) {
-    return this.updateSubscription.execute(id, dto);
+  @ApplySwagger(SubscriptionsSwagger.create)
+  async create(@Body() dto: CreateSubscriptionDto) {
+    return this.createSubscription.execute(dto);
   }
-
-  @Patch(':id/renew')
-  @Auth(UserRole.admin)
-  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.renew)
-  async renew(
-    @Param('id', ParseIntPipe) id: number,
-  ) {
-    return this.renewSubscription.execute(id);
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | USER ROUTES
-  |--------------------------------------------------------------------------
-  */
 
   @Get('me')
   @Auth()
@@ -142,13 +114,24 @@ export class SubscriptionsController {
     } = query;
 
     return this.listUserSubscriptions.execute({
-      customerId: user.id,
+      userId: user.id,
       page: Math.max(Number(page), 1),
       limit: Math.min(Math.max(Number(limit), 1), 100),
       sortBy,
       sortOrder,
       status
     });
+  }
+
+  @Post('subscribe')
+  @Auth()
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.subscribe)
+  async subscribe(
+    @AuthUser() user: any,
+    @Body() dto: SubscribeSubscriptionDto
+  ) {
+    return this.subscribeSubscription.execute(user.id, dto);
   }
 
   @Get(':id')
@@ -162,15 +145,46 @@ export class SubscriptionsController {
     return this.findSubscription.execute(id, user);
   }
 
-  @Post('subscribe')
-  @Auth()
+  @Patch(':id')
+  @Auth(UserRole.admin)
   @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
-  @ApplySwagger(SubscriptionsSwagger.subscribe)
-  async subscribe(
-    @AuthUser() user: any,
-    @Body() dto: SubscribeSubscriptionDto
+  @ApplySwagger(SubscriptionsSwagger.update)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSubscriptionDto
   ) {
-    return this.subscribeSubscription.execute(user.id, dto);
+    return this.updateSubscription.execute(id, dto);
+  }
+
+  @Get(':id/payments')
+  @Auth()
+  @ApplySwagger(SubscriptionsSwagger.findPayments)
+  async findPayments(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: any,
+  ) {
+    return this.listSubscriptionPayments.execute(id, user);
+  }
+
+  @Patch(':id/status')
+  @Auth(UserRole.admin)
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.updateStatus)
+  async updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSubscriptionStatusDto,
+  ) {
+    return this.updateSubscriptionStatus.execute(id, dto);
+  }
+
+  @Patch(':id/renew')
+  @Auth(UserRole.admin)
+  @UseInterceptors(new SerializeInterceptor(SubscriptionResponseDto))
+  @ApplySwagger(SubscriptionsSwagger.renew)
+  async renew(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.renewSubscription.execute(id);
   }
 
   @Patch(':id/cancel')

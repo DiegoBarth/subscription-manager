@@ -149,4 +149,14 @@ export class PlansRepository {
     return count > 0;
   }
 
+  async findActiveById(id: number) {
+    return this.prisma.plan.findFirst({
+      where: {
+        id,
+        active: true,
+        deleted_at: null,
+      },
+    });
+  }
+
 }

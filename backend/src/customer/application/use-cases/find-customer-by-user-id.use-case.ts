@@ -13,7 +13,7 @@ export class FindCustomerByUserIdUseCase {
   ) { }
 
   async execute(userId: number): Promise<CustomerResponseDto> {
-    const customer = await this.customersRepo.findByUserId(userId);
+    const customer = await this.customersRepo.findActiveByUserId(userId);
 
     if (!customer) {
       throw new NotFoundException('Customer not found for this user');

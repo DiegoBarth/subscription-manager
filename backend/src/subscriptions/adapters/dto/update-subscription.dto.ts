@@ -1,6 +1,5 @@
-import { IsOptional, IsInt, IsDateString, IsString, IsIn } from 'class-validator';
+import { IsOptional, IsInt, IsDateString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
 
 export class UpdateSubscriptionDto {
 
@@ -14,9 +13,4 @@ export class UpdateSubscriptionDto {
   @ApiPropertyOptional({ example: '2027-03-12' })
   endDate?: string;
 
-  @IsOptional()
-  @IsString()
-  @IsIn(Object.values(SubscriptionStatus))
-  @ApiPropertyOptional({ example: 'canceled' })
-  status?: string;
 }

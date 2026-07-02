@@ -1,37 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SubscriptionsRepository } from '../../infrastructure/repositories';
 import { ListUserSubscriptionsParams } from '../interfaces/list-user-subscriptions-params.interface';
+import { CustomersRepository } from 'src/customer/infrastructure/repositories';
 
 @Injectable()
 export class ListUserSubscriptionsUseCase {
-
   constructor(
-    private readonly subscriptionsRepo: SubscriptionsRepository
+    private readonly subscriptionsRepo: SubscriptionsRepository,
+    private readonly customersRepo: CustomersRepository,
   ) { }
 
   async execute(params: ListUserSubscriptionsParams) {
-
     const {
-      customerId,
+      userId,
       page,
       limit,
       sortBy = 'created_at',
       sortOrder = 'DESC',
-      status
+      status,
     } = params;
 
-    const skip = (page - 1) * limit;
-    const take = limit;
+    const customer = await this.customersRepo.findActiveByUserId(userId);
+
+    if (!customer) {
+      throw new NotFoundException(
+        `Customer not found for user ${userId}`,
+      );
+    }
 
     return this.subscriptionsRepo.findByCustomer({
-      customerId,
-      skip,
-      take,
+      customerId: customer.id,
+      skip: (page - 1) * limit,
+      take: limit,
       sortBy,
       sortOrder,
-      status
+      status,
     });
-
   }
-
 }

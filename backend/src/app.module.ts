@@ -14,13 +14,13 @@ import { InfrastructureModule } from './infrastructure/infrastructure.module';
 @Module({
    imports: [
       ConfigModule.forRoot({ isGlobal: true }),
-      UsersModule,
+      AuthModule,
+      CustomerModule,
       PaymentsModule,
       PlansModule,
       SubscriptionsModule,
-      CustomerModule,
+      UsersModule,
       PrismaModule,
-      AuthModule,
       InfrastructureModule
    ],
    controllers: [AppController],

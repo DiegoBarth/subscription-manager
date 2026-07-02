@@ -4,8 +4,11 @@ import {
   UpdateSubscriptionDto,
   SubscriptionResponseDto,
   SubscribeSubscriptionDto,
-  CancelSubscriptionDto
+  CancelSubscriptionDto,
+  UpdateSubscriptionStatusDto
 } from "./dto";
+import { PaymentResponseDto } from "src/payments/adapters/dto";
+import { SuccessResponseDto } from "src/common/dto";
 
 export const SubscriptionsSwagger = {
 
@@ -35,7 +38,7 @@ export const SubscriptionsSwagger = {
   },
 
   findById: {
-    summary: 'Get subscription by ID (Admin only)',
+    summary: 'Get subscription by ID',
     bearerAuth: true,
     roles: [UserRole.admin],
     param: {
@@ -101,6 +104,25 @@ export const SubscriptionsSwagger = {
       example: 1
     },
     responseType: SubscriptionResponseDto
-  }
+  },
+
+  findPayments: {
+    summary: 'List subscription payments',
+    description:
+      'Returns all payments associated with a subscription.',
+    response: PaymentResponseDto
+  },
+
+  updateStatus: {
+    summary: 'Update subscription status (Admin only)',
+    description:
+      'Allows an admin to manually update the status of a subscription. This should be used for administrative corrections or lifecycle overrides.',
+    request: {
+      body: {
+        type: UpdateSubscriptionStatusDto,
+      },
+    },
+    response: SuccessResponseDto
+  },
 
 };

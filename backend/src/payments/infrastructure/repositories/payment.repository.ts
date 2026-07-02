@@ -108,4 +108,17 @@ export class PaymentsRepository {
       },
     });
   }
+
+  findBySubscriptionId(subscriptionId: number) {
+    return this.prisma.payment.findMany({
+      where: {
+        subscription_id: subscriptionId,
+        deleted_at: null,
+      },
+      orderBy: {
+        due_date: 'desc',
+      },
+    });
+  }
+
 }

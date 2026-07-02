@@ -9,7 +9,7 @@ export class UpdateCustomerMeUseCase {
   ) { }
 
   async executeMe(userId: number, dto: UpdateCustomerDto) {
-    const customer = await this.customersRepo.findByUserId(userId);
+    const customer = await this.customersRepo.findActiveByUserId(userId);
 
     if (!customer) {
       throw new NotFoundException('Customer not found');

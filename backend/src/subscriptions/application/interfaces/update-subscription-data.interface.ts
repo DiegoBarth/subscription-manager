@@ -1,4 +1,4 @@
-import { SubscriptionStatus } from '../../domain/enums';
+import { SubscriptionStatus } from "@prisma/client";
 
 export interface UpdateSubscriptionData {
   planId?: number;

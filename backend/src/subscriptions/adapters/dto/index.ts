@@ -5,3 +5,4 @@ export * from './list-subscriptions.dto';
 export * from './list-user-subscriptions.dto';
 export * from './subscribe-subscription.dto';
 export * from './cancel-subscription.dto';
+export * from './update-subscription-status.dto';

@@ -1,51 +1,29 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../../infrastructure/repositories';
-import { CustomersRepository } from 'src/customer/infrastructure/repositories';
-import { PlansRepository } from 'src/plans/infrastructure/repositories';
-import { SubscribeSubscriptionDto } from '../../adapters/dto';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CustomersRepository } from "src/customer/infrastructure/repositories";
+import { SubscriptionService } from "../services/subscription.service";
+import { SubscribeSubscriptionDto } from "src/subscriptions/adapters/dto";
 
 @Injectable()
 export class SubscribeSubscriptionUseCase {
 
   constructor(
-    private readonly subscriptionsRepo: SubscriptionsRepository,
     private readonly customersRepo: CustomersRepository,
-    private readonly plansRepo: PlansRepository,
+    private readonly subscriptionService: SubscriptionService
   ) { }
 
-  async execute(customerId: number, dto: SubscribeSubscriptionDto) {
-
-    const customer = await this.customersRepo.findById(customerId);
+  async execute(userId: number, dto: SubscribeSubscriptionDto) {
+    const customer = await this.customersRepo.findActiveByUserId(userId);
 
     if (!customer) {
-      throw new NotFoundException(`Customer with id ${customerId} not found`);
+      throw new NotFoundException(
+        `Customer not found for user ${userId}`,
+      );
     }
 
-    const plan = await this.plansRepo.findById(dto.planId);
-
-    if (!plan) {
-      throw new NotFoundException(`Plan with id ${dto.planId} not found`);
-    }
-
-    const activeSubscription =
-      await this.subscriptionsRepo.findActiveByCustomer(customerId);
-
-    if (activeSubscription) {
-      throw new ConflictException('Customer already has an active subscription');
-    }
-
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setFullYear(startDate.getFullYear() + 1);
-
-    return this.subscriptionsRepo.create({
-      customerId,
-      planId: dto.planId,
-      startDate,
-      endDate,
-      status: SubscriptionStatus.ACTIVE,
-      contractedPrice: plan.price,
-    });
+    return this.subscriptionService.create(
+      customer.id,
+      dto.planId,
+    );
   }
+
 }

@@ -1,6 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsIn } from 'class-validator';
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums';
+import { SubscriptionStatus } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SubscriptionResponseDto {

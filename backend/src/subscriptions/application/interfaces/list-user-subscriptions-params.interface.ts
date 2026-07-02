@@ -1,7 +1,7 @@
-import { SubscriptionStatus } from 'src/subscriptions/domain/enums/subscription-status.enum';
+import { SubscriptionStatus } from "@prisma/client";
 
 export interface ListUserSubscriptionsParams {
-  customerId: number;
+  userId: number;
   page: number;
   limit: number;
   sortBy?: string;
