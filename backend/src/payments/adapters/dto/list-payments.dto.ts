@@ -1,6 +1,6 @@
 import { IsEnum, IsOptional, IsInt, IsString, IsNumberString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
+import { PaymentStatus } from '@prisma/client';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ListPaymentsDto {

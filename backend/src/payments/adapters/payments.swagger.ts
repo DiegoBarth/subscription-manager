@@ -1,4 +1,4 @@
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
+import { PaymentStatus } from "@prisma/client";
 import {
   UpdatePaymentDto,
   PaymentResponseDto
@@ -11,7 +11,7 @@ export const PaymentsSwagger = {
     responseType: PaymentResponseDto,
     queryParams: [
       { name: 'subscriptionId', required: false, example: 1 },
-      { name: 'status', required: false, example: PaymentStatus.PENDING },
+      { name: 'status', required: false, example: PaymentStatus.pending },
     ],
   },
 

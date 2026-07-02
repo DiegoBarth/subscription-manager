@@ -1,8 +1,7 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { IsIn } from 'class-validator';
-import { UserRole } from '@prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserStatus } from 'src/users/domain/enums';
 
 export class UserResponseDto {
 

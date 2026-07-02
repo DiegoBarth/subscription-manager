@@ -1,5 +1,4 @@
-import { PaymentStatus } from '../../domain/enums/payment-status.enum';
-import { PaymentMethod } from '../../domain/enums/payment-method.enum';
+import { PaymentStatus, PaymentMethod } from "@prisma/client";
 
 export interface UpdatePaymentData {
   amount?: number;

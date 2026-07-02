@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { PaymentsRepository } from '../../infrastructure/repositories';
-import { PaymentStatus } from '../../domain/enums/payment-status.enum';
+import { PaymentStatus } from '@prisma/client';
 
 @Injectable()
 export class RefundPaymentUseCase {
@@ -20,14 +20,14 @@ export class RefundPaymentUseCase {
       throw new NotFoundException(`Payment with id ${id} not found`);
     }
 
-    if (payment.status !== PaymentStatus.PAID) {
+    if (payment.status !== PaymentStatus.paid) {
       throw new BadRequestException(
         `Only paid payments can be refunded`,
       );
     }
 
     return this.paymentsRepo.update(id, {
-      status: PaymentStatus.REFUNDED,
+      status: PaymentStatus.refunded,
       refundedAt: new Date(),
     });
   }

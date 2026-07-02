@@ -1,6 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { PaymentStatus } from '../enums/payment-status.enum';
-import { PaymentMethod } from '../enums/payment-method.enum';
+import { PaymentStatus, PaymentMethod } from '@prisma/client';
 
 export class PaymentEntity {
   id!: number;
@@ -28,19 +27,19 @@ export class PaymentEntity {
   }
 
   isPaid(): boolean {
-    return this.status === PaymentStatus.PAID;
+    return this.status === PaymentStatus.paid;
   }
 
   isPending(): boolean {
-    return this.status === PaymentStatus.PENDING;
+    return this.status === PaymentStatus.pending;
   }
 
   isFailed(): boolean {
-    return this.status === PaymentStatus.FAILED;
+    return this.status === PaymentStatus.failed;
   }
 
   isRefunded(): boolean {
-    return this.status === PaymentStatus.REFUNDED;
+    return this.status === PaymentStatus.refunded;
   }
 
   isOverdue(): boolean {
@@ -49,7 +48,7 @@ export class PaymentEntity {
   }
 
   markAsPaid(method: PaymentMethod): void {
-    this.status = PaymentStatus.PAID;
+    this.status = PaymentStatus.paid;
     this.paymentMethod = method;
     this.paidAt = new Date();
   }

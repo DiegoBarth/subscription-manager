@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { UserStatus } from "src/users/domain/enums";
+import { UserStatus } from "@prisma/client";
 
 @Injectable()
 export class AuthUserPolicy {
@@ -8,7 +8,7 @@ export class AuthUserPolicy {
       throw new UnauthorizedException('User account has been deleted');
     }
 
-    if (user.status !== UserStatus.ACTIVE) {
+    if (user.status !== UserStatus.active) {
       throw new UnauthorizedException('User account is not active');
     }
   }

@@ -1,4 +1,4 @@
-import { PaymentStatus } from '../../domain/enums/payment-status.enum';
+import { PaymentStatus } from "@prisma/client";
 
 export interface CreatePaymentData {
   subscriptionId: number;

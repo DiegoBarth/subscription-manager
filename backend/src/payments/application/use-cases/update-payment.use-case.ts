@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { PaymentsRepository } from '../../infrastructure/repositories';
-import { PaymentStatus } from '../../domain/enums/payment-status.enum';
+import { PaymentStatus } from '@prisma/client';
 import { UpdatePaymentDto } from '../../adapters/dto';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class UpdatePaymentUseCase {
       throw new NotFoundException(`Payment with id ${id} not found`);
     }
 
-    if (payment.status !== PaymentStatus.PENDING) {
+    if (payment.status !== PaymentStatus.pending) {
       throw new BadRequestException(
         `Only pending payments can be updated`,
       );

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { PaymentsRepository } from '../../infrastructure/repositories';
-import { PaymentStatus } from '../../domain/enums/payment-status.enum';
+import { PaymentStatus } from '@prisma/client';
 import { MarkPaymentAsPaidDto } from '../../adapters/dto';
 import { BillingService } from 'src/billing/application/services/billing.service';
 
@@ -23,13 +23,13 @@ export class MarkPaymentAsPaidUseCase {
       throw new NotFoundException(`Payment with id ${id} not found`);
     }
 
-    if (payment.status === PaymentStatus.PAID) {
+    if (payment.status === PaymentStatus.paid) {
       return payment;
     }
 
     if (
-      payment.status === PaymentStatus.REFUNDED ||
-      payment.status === PaymentStatus.FAILED
+      payment.status === PaymentStatus.refunded ||
+      payment.status === PaymentStatus.failed
     ) {
       throw new BadRequestException(
         `Payment in status ${payment.status} cannot be processed`,
@@ -37,14 +37,14 @@ export class MarkPaymentAsPaidUseCase {
     }
 
     await this.paymentsRepo.update(id, {
-      status: PaymentStatus.PAID,
+      status: PaymentStatus.paid,
       paidAt: new Date(),
       paymentMethod: dto.paymentMethod,
     });
 
     await this.billingService.onPaymentPaid({
       ...payment,
-      status: PaymentStatus.PAID,
+      status: PaymentStatus.paid,
     });
 
     return this.paymentsRepo.findById(id);

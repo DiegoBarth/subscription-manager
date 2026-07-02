@@ -5,10 +5,9 @@ import {
 } from '@nestjs/common';
 
 import { SuccessResponseDto } from 'src/common/dto';
-import { UserStatus } from 'src/users/domain/enums';
 import { UpdateUserStatusDto } from 'src/users/adapters/dto';
 import { UsersRepository } from 'src/users/infrastructure/repositories';
-import { UserRole } from '@prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
 
 @Injectable()
 export class UpdateUserStatusUseCase {
@@ -34,11 +33,7 @@ export class UpdateUserStatusUseCase {
       );
     }
 
-    const forbiddenTransitions = [
-      UserStatus.PENDING,
-    ];
-
-    if (forbiddenTransitions.includes(dto.status)) {
+    if (dto.status === UserStatus.pending) {
       throw new BadRequestException(
         `Cannot manually set status to ${dto.status}`,
       );
@@ -46,8 +41,8 @@ export class UpdateUserStatusUseCase {
 
     if (
       id === currentUserId &&
-      (dto.status === UserStatus.INACTIVE ||
-        dto.status === UserStatus.BLOCKED)
+      (dto.status === UserStatus.inactive ||
+        dto.status === UserStatus.blocked)
     ) {
       throw new BadRequestException(
         'You cannot deactivate or block your own account',
@@ -56,8 +51,8 @@ export class UpdateUserStatusUseCase {
 
     if (
       user.role === UserRole.admin &&
-      (dto.status === UserStatus.INACTIVE ||
-        dto.status === UserStatus.BLOCKED)
+      (dto.status === UserStatus.inactive ||
+        dto.status === UserStatus.blocked)
     ) {
       const activeAdmins = await this.usersRepo.countActiveAdmins();
 

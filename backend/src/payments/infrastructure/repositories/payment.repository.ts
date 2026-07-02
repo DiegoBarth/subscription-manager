@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindPaymentsParams } from 'src/payments/domain/interface/find-payments-params.interface';
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
+import { PaymentStatus } from '@prisma/client';
 import { CreatePaymentData } from 'src/payments/application/interfaces/create-payment-data.interface';
 import { UpdatePaymentData } from 'src/payments/application/interfaces/update-payment-data.interface';
 
@@ -128,7 +128,7 @@ export class PaymentsRepository {
     return this.prisma.payment.findFirst({
       where: {
         subscription_id: subscriptionId,
-        status: PaymentStatus.PENDING,
+        status: PaymentStatus.pending,
         deleted_at: null,
       },
       orderBy: {

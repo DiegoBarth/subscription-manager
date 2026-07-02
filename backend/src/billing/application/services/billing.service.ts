@@ -5,10 +5,9 @@ import {
 } from '@nestjs/common';
 
 import { PaymentsRepository } from 'src/payments/infrastructure/repositories';
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
+import { PaymentStatus, SubscriptionStatus } from '@prisma/client';
 
 import { SubscriptionsRepository } from 'src/subscriptions/infrastructure/repositories';
-import { SubscriptionStatus } from '@prisma/client';
 
 import { PlansRepository } from 'src/plans/infrastructure/repositories';
 
@@ -38,7 +37,7 @@ export class BillingService {
       subscriptionId,
       amount,
       dueDate,
-      status: PaymentStatus.PENDING,
+      status: PaymentStatus.pending,
     });
   }
 

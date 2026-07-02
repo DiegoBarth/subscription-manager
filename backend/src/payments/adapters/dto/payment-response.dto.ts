@@ -1,8 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { Decimal } from '@prisma/client/runtime/library';
-import { PaymentStatus } from 'src/payments/domain/enums/payment-status.enum';
-import { PaymentMethod } from 'src/payments/domain/enums/payment-method.enum';
+import { PaymentStatus, PaymentMethod } from '@prisma/client';
 
 export class PaymentResponseDto {
 
@@ -33,11 +31,11 @@ export class PaymentResponseDto {
   paid_at?: string;
 
   @Expose()
-  @ApiProperty({ example: PaymentStatus.PAID })
+  @ApiProperty({ example: PaymentStatus.paid })
   status!: PaymentStatus;
 
   @Expose()
-  @ApiProperty({ example: PaymentMethod.PIX })
+  @ApiProperty({ example: PaymentMethod.pix })
   payment_method!: PaymentMethod;
 
   @Expose()
